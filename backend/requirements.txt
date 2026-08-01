@@ -1,0 +1,11 @@
+fastapi
+uvicorn
+supabase
+pydantic
+python-dotenv
+sqlalchemy
+psycopg2-binary
+groq
+google-generativeai
+PyMuPDF
+python-multipart
