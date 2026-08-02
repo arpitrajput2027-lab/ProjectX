@@ -516,7 +516,7 @@ export function ProfileView() {
                     <h3 className="font-mono text-xs uppercase tracking-widest text-muted mb-4 border-b border-rule pb-2 w-full text-left">Stats Overview</h3>
                     {leetcodeUsername ? (
                       <img
-                        src={`https://leetcard.jacoblin.cool/${leetcodeUsername}?theme=light&font=baloo&ext=contest`}
+                        src={`https://leetcard.jacoblin.cool/${leetcodeUsername}?theme=light&font=baloo`}
                         alt="LeetCode Stats"
                         className="w-full max-w-[400px] rounded-md shadow-sm"
                       />
@@ -529,11 +529,11 @@ export function ProfileView() {
                   <div className="bg-white border border-rule-med p-5 rounded-md shadow-sm flex flex-col items-center">
                     <h3 className="font-mono text-xs uppercase tracking-widest text-muted mb-4 border-b border-rule pb-2 w-full text-left">Activity Heatmap</h3>
                     {leetcodeUsername ? (
-                      <div className="w-full max-w-[400px] rounded-md shadow-sm overflow-hidden bg-white">
+                      <div className="w-full max-w-[400px] bg-white rounded-md shadow-sm overflow-hidden" style={{ height: "160px", position: "relative" }}>
                         <img
                           src={`https://leetcard.jacoblin.cool/${leetcodeUsername}?theme=light&font=baloo&ext=heatmap`}
                           alt="LeetCode Heatmap"
-                          className="w-full h-[180px] object-cover object-bottom"
+                          style={{ width: "100%", height: "auto", position: "absolute", bottom: 0, left: 0 }}
                         />
                       </div>
                     ) : (
