@@ -46,8 +46,37 @@ export function ProfileView() {
         .eq("user_id", session.user.id)
         .single();
 
-      if (error) {
-        console.error("Error loading profile:", error);
+      if (error || !data) {
+        // No profile found, auto-create a basic profile so they can view the dashboard
+        const defaultProfile = {
+          user_id: session.user.id,
+          full_name: session.user.email?.split('@')[0] || "User",
+          onboarding_completed: true,
+          target_role: "Not set",
+          education: [],
+          experience: [],
+          projects: [],
+          skills: [],
+          achievements: [],
+          certifications: []
+        };
+        
+        await supabase.from("users").upsert({
+          id: session.user.id,
+          email: session.user.email,
+          role: "student"
+        }, { onConflict: "id" });
+
+        await supabase.from("student_profiles").upsert(defaultProfile, { onConflict: "user_id" });
+        
+        setProfile(defaultProfile);
+        resetContact({
+          full_name: defaultProfile.full_name,
+          email: session.user.email,
+          phone: "",
+          location: "",
+          target_role: defaultProfile.target_role,
+        });
       } else if (data) {
         setProfile(data);
         resetContact({
@@ -99,7 +128,7 @@ export function ProfileView() {
   };
 
   if (loading) return <div className="p-24 text-center font-mono uppercase tracking-widest text-muted">Loading profile...</div>;
-  if (!profile) return <div className="p-24 text-center text-ink">Profile not found. Please complete onboarding.</div>;
+  if (!profile) return null; // Let the redirect handle it
 
   const githubUsername = profile.github_username;
   const leetcodeUsername = profile.leetcode_username;

@@ -1,8 +1,10 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { ArrowRight, Briefcase, GraduationCap } from "lucide-react";
+import { supabase } from "@/lib/supabase";
 
 export function LandingPage() {
   return (
@@ -35,7 +37,7 @@ export function LandingPage() {
             <div className="w-12 h-12 bg-cream text-accent rounded-full flex items-center justify-center mb-2">
               <GraduationCap className="w-6 h-6" />
             </div>
-            <span className="font-mono text-xs tracking-widest uppercase font-semibold">For Students</span>
+            <span className="font-mono text-xs tracking-widest uppercase font-semibold">Analyze My Profile</span>
             <span className="text-sm text-ink-3 text-center">Build your profile, prove your skills, and get hired.</span>
             <div className="mt-2 text-accent flex items-center gap-1 text-xs uppercase tracking-widest font-mono font-medium opacity-0 group-hover:opacity-100 transition-opacity">
               <span>Explore</span>
