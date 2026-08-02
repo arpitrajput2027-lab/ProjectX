@@ -62,12 +62,16 @@ export default function AuthModal({ isOpen, onClose, defaultMode = "signup", tar
         throw new Error("Failed to authenticate.");
       }
 
-      // Check user role from metadata or db (if login, we might not know their role beforehand, 
-      // but they are on a specific landing page, we assume targetRole for routing initially.
-      // However, it's safer to fetch the `users` table, but our users table is populated by a trigger.
-      // Let's rely on targetRole for now, or check student_profiles directly.
-      
-      if (targetRole === "student") {
+      // Fetch actual role from the users table
+      const { data: userData } = await supabase
+        .from('users')
+        .select('role')
+        .eq('id', currentSessionUser.id)
+        .single();
+        
+      const actualRole = userData?.role || targetRole;
+
+      if (actualRole === "student") {
         // Check if student profile exists and onboarding is complete
         const { data: profile, error: profileError } = await supabase
           .from("student_profiles")
@@ -80,13 +84,13 @@ export default function AuthModal({ isOpen, onClose, defaultMode = "signup", tar
         }
 
         if (profile?.onboarding_completed) {
-          window.open("/profile", "_blank");
+          router.push("/profile");
         } else {
-          window.open("/onboarding", "_blank");
+          router.push("/onboarding");
         }
       } else {
         // Recruiter flow
-        window.open("/recruiter-dashboard", "_blank");
+        router.push("/recruiter-dashboard");
       }
       onClose();
     } catch (err: any) {
@@ -108,7 +112,7 @@ export default function AuthModal({ isOpen, onClose, defaultMode = "signup", tar
     if (error) {
       setError(error.message);
     } else if (data?.url) {
-      window.open(data.url, "_blank");
+      router.push(data.url);
       onClose();
     }
   };

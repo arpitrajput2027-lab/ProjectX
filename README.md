@@ -5,6 +5,8 @@ Arpit_Rajput_Lodhi
 arpitrajput2027-lab
 Welcome to the AI Career OS Project. This is an MVP implementation built using **Next.js (App Router)** for the frontend, **FastAPI** for the backend, and **Supabase** for database and authentication.
 
+For full local setup instructions, including Supabase configuration, Google OAuth, backend/frontend startup, and environment files, see [SETUP.md](SETUP.md).
+
 ## 📁 Project Structure
 
 This project follows a highly modular, feature-based architecture to make code readable and debugging easier.

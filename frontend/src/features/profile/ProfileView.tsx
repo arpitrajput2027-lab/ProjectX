@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
-import { Save, ArrowRight, Pencil, FileText, BarChart2, X } from "lucide-react";
+import { Save, ArrowRight, Pencil, FileText, BarChart2, X, GitBranch, Code } from "lucide-react";
 
 import ProjectModal from "@/components/modals/ProjectModal";
 import EducationModal from "@/components/modals/EducationModal";
@@ -47,36 +47,9 @@ export function ProfileView() {
         .single();
 
       if (error || !data) {
-        // No profile found, auto-create a basic profile so they can view the dashboard
-        const defaultProfile = {
-          user_id: session.user.id,
-          full_name: session.user.email?.split('@')[0] || "User",
-          onboarding_completed: true,
-          target_role: "Not set",
-          education: [],
-          experience: [],
-          projects: [],
-          skills: [],
-          achievements: [],
-          certifications: []
-        };
-        
-        await supabase.from("users").upsert({
-          id: session.user.id,
-          email: session.user.email,
-          role: "student"
-        }, { onConflict: "id" });
-
-        await supabase.from("student_profiles").upsert(defaultProfile, { onConflict: "user_id" });
-        
-        setProfile(defaultProfile);
-        resetContact({
-          full_name: defaultProfile.full_name,
-          email: session.user.email,
-          phone: "",
-          location: "",
-          target_role: defaultProfile.target_role,
-        });
+        // Redirect to onboarding if they don't have a profile
+        router.push("/onboarding");
+        return;
       } else if (data) {
         setProfile(data);
         resetContact({
@@ -145,7 +118,7 @@ export function ProfileView() {
             className="flex items-center space-x-2 bg-ink text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-accent transition-colors"
           >
             <BarChart2 className="w-4 h-4" />
-            <span>Your Stats 📊</span>
+            <span>Github Leetcode Stats 📊</span>
           </button>
         </div>
         
@@ -430,8 +403,14 @@ export function ProfileView() {
 
       {/* --- STATS DRAWER --- */}
       {isStatsDrawerOpen && (
-        <div className="fixed inset-0 z-50 flex justify-end bg-black/40 backdrop-blur-sm">
-          <div className="bg-cream-2 w-full max-w-2xl h-full shadow-2xl flex flex-col animate-in slide-in-from-right duration-300">
+        <div 
+          className="fixed inset-0 z-50 flex justify-end bg-black/40 backdrop-blur-sm"
+          onClick={() => setIsStatsDrawerOpen(false)}
+        >
+          <div 
+            className="bg-cream-2 w-full max-w-2xl h-full shadow-2xl flex flex-col animate-in slide-in-from-right duration-300"
+            onClick={(e) => e.stopPropagation()}
+          >
             <div className="flex items-center justify-between p-6 bg-white border-b border-rule-med">
               <h2 className="text-xl font-serif font-medium text-ink flex items-center space-x-2">
                 <BarChart2 className="w-5 h-5" />
@@ -442,106 +421,126 @@ export function ProfileView() {
               </button>
             </div>
             
-            <div className="flex-1 overflow-y-auto p-6 space-y-8">
+            <div className="flex-1 overflow-y-auto p-6 space-y-10">
               
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {/* GitHub Stats Card */}
-                <div className="bg-white border border-rule-med p-5 rounded-md shadow-sm">
-                  <h3 className="font-mono text-xs uppercase tracking-widest text-muted mb-4 border-b border-rule pb-2">GitHub Overview</h3>
-                  {githubUsername ? (
-                    <img
-                      src={`https://github-readme-stats-eight-theta.vercel.app/api?username=${githubUsername}&show_icons=true&theme=tokyonight&bg_color=faf8f4&title_color=1a1814&text_color=3d3a35&icon_color=8b6a3e&border_color=e2dbd0`}
-                      alt="GitHub Stats"
-                      className="w-full rounded-md"
-                    />
-                  ) : (
-                    <div className="text-sm text-ink-3 p-4 bg-cream-2 rounded text-center">GitHub not connected</div>
-                  )}
+              {/* --- GITHUB SECTION --- */}
+              <div className="space-y-4">
+                <div className="flex items-center space-x-2 pb-2 border-b border-rule-med">
+                  <GitBranch className="w-5 h-5 text-ink" />
+                  <h2 className="text-lg font-serif font-medium text-ink">GitHub Analytics</h2>
                 </div>
 
-                {/* GitHub Top Languages */}
-                <div className="bg-white border border-rule-med p-5 rounded-md shadow-sm">
-                  <h3 className="font-mono text-xs uppercase tracking-widest text-muted mb-4 border-b border-rule pb-2">Top Languages</h3>
-                  {githubUsername ? (
-                    <img
-                      src={`https://github-readme-stats-eight-theta.vercel.app/api/top-langs/?username=${githubUsername}&layout=compact&theme=tokyonight&bg_color=faf8f4&title_color=1a1814&text_color=3d3a35&border_color=e2dbd0`}
-                      alt="Top Languages"
-                      className="w-full rounded-md"
-                    />
-                  ) : (
-                    <div className="text-sm text-ink-3 p-4 bg-cream-2 rounded text-center">GitHub not connected</div>
-                  )}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {/* GitHub Stats Card */}
+                  <div className="bg-white border border-rule-med p-5 rounded-md shadow-sm">
+                    <h3 className="font-mono text-xs uppercase tracking-widest text-muted mb-4 border-b border-rule pb-2">Overview</h3>
+                    {githubUsername ? (
+                      <img
+                        src={`https://github-readme-stats-eight-theta.vercel.app/api?username=${githubUsername}&show_icons=true&theme=tokyonight&bg_color=faf8f4&title_color=1a1814&text_color=3d3a35&icon_color=8b6a3e&border_color=e2dbd0`}
+                        alt="GitHub Stats"
+                        className="w-full rounded-md"
+                      />
+                    ) : (
+                      <div className="text-sm text-ink-3 p-4 bg-cream-2 rounded text-center">Not connected</div>
+                    )}
+                  </div>
+
+                  {/* GitHub Top Languages */}
+                  <div className="bg-white border border-rule-med p-5 rounded-md shadow-sm">
+                    <h3 className="font-mono text-xs uppercase tracking-widest text-muted mb-4 border-b border-rule pb-2">Top Languages</h3>
+                    {githubUsername ? (
+                      <img
+                        src={`https://github-readme-stats-eight-theta.vercel.app/api/top-langs/?username=${githubUsername}&layout=compact&theme=tokyonight&bg_color=faf8f4&title_color=1a1814&text_color=3d3a35&border_color=e2dbd0`}
+                        alt="Top Languages"
+                        className="w-full rounded-md"
+                      />
+                    ) : (
+                      <div className="text-sm text-ink-3 p-4 bg-cream-2 rounded text-center">Not connected</div>
+                    )}
+                  </div>
+
+                  {/* GitHub Streak Card */}
+                  <div className="bg-white border border-rule-med p-5 rounded-md shadow-sm md:col-span-2">
+                    <h3 className="font-mono text-xs uppercase tracking-widest text-muted mb-4 border-b border-rule pb-2">Commit Streak</h3>
+                    {githubUsername ? (
+                      <img
+                        src={`https://streak-stats.demolab.com?user=${githubUsername}&theme=tokyonight&background=faf8f4&border=e2dbd0&stroke=8b6a3e&ring=8b6a3e&fire=8b6a3e&currStreakLabel=3d3a35`}
+                        alt="GitHub Streak"
+                        className="w-full rounded-md"
+                      />
+                    ) : (
+                      <div className="text-sm text-ink-3 p-4 bg-cream-2 rounded text-center">Not connected</div>
+                    )}
+                  </div>
+
+                  {/* GitHub Activity Graph */}
+                  <div className="bg-white border border-rule-med p-5 rounded-md shadow-sm md:col-span-2">
+                    <h3 className="font-mono text-xs uppercase tracking-widest text-muted mb-4 border-b border-rule pb-2">Activity Graph</h3>
+                    {githubUsername ? (
+                      <img
+                        src={`https://github-readme-activity-graph.vercel.app/graph?username=${githubUsername}&theme=github-compact&bg_color=faf8f4&title_color=1a1814&color=3d3a35&line=8b6a3e&point=1a1814&hide_border=true`}
+                        alt="GitHub Activity Graph"
+                        className="w-full rounded-md"
+                      />
+                    ) : (
+                      <div className="text-sm text-ink-3 p-4 bg-cream-2 rounded text-center">Not connected</div>
+                    )}
+                  </div>
+
+                  {/* GitHub Heatmap */}
+                  <div className="bg-white border border-rule-med p-5 rounded-md shadow-sm md:col-span-2">
+                    <h3 className="font-mono text-xs uppercase tracking-widest text-muted mb-4 border-b border-rule pb-2">Contributions Heatmap</h3>
+                    {githubUsername ? (
+                      <img
+                        src={`https://ghchart.rshah.org/8b6a3e/${githubUsername}`}
+                        alt="GitHub Heatmap"
+                        className="w-full rounded-md"
+                      />
+                    ) : (
+                      <div className="text-sm text-ink-3 p-4 bg-cream-2 rounded text-center">Not connected</div>
+                    )}
+                  </div>
                 </div>
               </div>
 
-              {/* GitHub Streak Card */}
-              <div className="bg-white border border-rule-med p-5 rounded-md shadow-sm">
-                <h3 className="font-mono text-xs uppercase tracking-widest text-muted mb-4 border-b border-rule pb-2">Commit Streak</h3>
-                {githubUsername ? (
-                  <img
-                    src={`https://streak-stats.demolab.com?user=${githubUsername}&theme=tokyonight&background=faf8f4&border=e2dbd0&stroke=8b6a3e&ring=8b6a3e&fire=8b6a3e&currStreakLabel=3d3a35`}
-                    alt="GitHub Streak"
-                    className="w-full rounded-md"
-                  />
-                ) : (
-                  <div className="text-sm text-ink-3 p-4 bg-cream-2 rounded text-center">GitHub not connected</div>
-                )}
-              </div>
+              {/* --- LEETCODE SECTION --- */}
+              <div className="space-y-4">
+                <div className="flex items-center space-x-2 pb-2 border-b border-rule-med">
+                  <Code className="w-5 h-5 text-yellow-600" />
+                  <h2 className="text-lg font-serif font-medium text-ink">LeetCode Analytics</h2>
+                </div>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {/* LeetCode Card */}
+                  <div className="bg-white border border-rule-med p-5 rounded-md shadow-sm flex flex-col items-center">
+                    <h3 className="font-mono text-xs uppercase tracking-widest text-muted mb-4 border-b border-rule pb-2 w-full text-left">Stats Overview</h3>
+                    {leetcodeUsername ? (
+                      <img
+                        src={`https://leetcard.jacoblin.cool/${leetcodeUsername}?theme=light&font=baloo&ext=contest`}
+                        alt="LeetCode Stats"
+                        className="w-full max-w-[400px] rounded-md shadow-sm"
+                      />
+                    ) : (
+                      <div className="text-sm text-ink-3 p-4 bg-cream-2 rounded text-center w-full">Not connected</div>
+                    )}
+                  </div>
 
-              {/* GitHub Activity Graph */}
-              <div className="bg-white border border-rule-med p-5 rounded-md shadow-sm">
-                <h3 className="font-mono text-xs uppercase tracking-widest text-muted mb-4 border-b border-rule pb-2">Activity Graph</h3>
-                {githubUsername ? (
-                  <img
-                    src={`https://github-readme-activity-graph.vercel.app/graph?username=${githubUsername}&theme=github-compact&bg_color=faf8f4&title_color=1a1814&color=3d3a35&line=8b6a3e&point=1a1814&hide_border=true`}
-                    alt="GitHub Activity Graph"
-                    className="w-full rounded-md"
-                  />
-                ) : (
-                  <div className="text-sm text-ink-3 p-4 bg-cream-2 rounded text-center">GitHub not connected</div>
-                )}
-              </div>
-
-              {/* GitHub Heatmap */}
-              <div className="bg-white border border-rule-med p-5 rounded-md shadow-sm">
-                <h3 className="font-mono text-xs uppercase tracking-widest text-muted mb-4 border-b border-rule pb-2">Contributions Heatmap</h3>
-                {githubUsername ? (
-                  <img
-                    src={`https://ghchart.rshah.org/8b6a3e/${githubUsername}`}
-                    alt="GitHub Heatmap"
-                    className="w-full rounded-md"
-                  />
-                ) : (
-                  <div className="text-sm text-ink-3 p-4 bg-cream-2 rounded text-center">GitHub not connected</div>
-                )}
-              </div>
-
-              {/* LeetCode Card */}
-              <div className="bg-white border border-rule-med p-5 rounded-md shadow-sm flex flex-col items-center">
-                <h3 className="font-mono text-xs uppercase tracking-widest text-muted mb-4 border-b border-rule pb-2 w-full text-left">LeetCode Stats</h3>
-                {leetcodeUsername ? (
-                  <img
-                    src={`https://leetcard.jacoblin.cool/${leetcodeUsername}?theme=light&font=baloo&ext=contest`}
-                    alt="LeetCode Stats"
-                    className="w-full max-w-[400px] rounded-md shadow-sm"
-                  />
-                ) : (
-                  <div className="text-sm text-ink-3 p-4 bg-cream-2 rounded text-center w-full">LeetCode not connected</div>
-                )}
-              </div>
-
-              {/* LeetCode Heatmap */}
-              <div className="bg-white border border-rule-med p-5 rounded-md shadow-sm flex flex-col items-center">
-                <h3 className="font-mono text-xs uppercase tracking-widest text-muted mb-4 border-b border-rule pb-2 w-full text-left">LeetCode Heatmap</h3>
-                {leetcodeUsername ? (
-                  <img
-                    src={`https://leetcard.jacoblin.cool/${leetcodeUsername}?theme=light&font=baloo&ext=heatmap`}
-                    alt="LeetCode Heatmap"
-                    className="w-full max-w-[400px] rounded-md shadow-sm"
-                  />
-                ) : (
-                  <div className="text-sm text-ink-3 p-4 bg-cream-2 rounded text-center w-full">LeetCode not connected</div>
-                )}
+                  {/* LeetCode Heatmap */}
+                  <div className="bg-white border border-rule-med p-5 rounded-md shadow-sm flex flex-col items-center">
+                    <h3 className="font-mono text-xs uppercase tracking-widest text-muted mb-4 border-b border-rule pb-2 w-full text-left">Activity Heatmap</h3>
+                    {leetcodeUsername ? (
+                      <div className="w-full max-w-[400px] rounded-md shadow-sm overflow-hidden bg-white">
+                        <img
+                          src={`https://leetcard.jacoblin.cool/${leetcodeUsername}?theme=light&font=baloo&ext=heatmap`}
+                          alt="LeetCode Heatmap"
+                          className="w-full h-[180px] object-cover object-bottom"
+                        />
+                      </div>
+                    ) : (
+                      <div className="text-sm text-ink-3 p-4 bg-cream-2 rounded text-center w-full">Not connected</div>
+                    )}
+                  </div>
+                </div>
               </div>
 
             </div>
