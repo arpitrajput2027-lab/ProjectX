@@ -11,8 +11,7 @@ env/
 ENV/
 .env
 .env.local
-.env.*
-!.env.example
+
 .pytest_cache/
 .mypy_cache/
 .ruff_cache/

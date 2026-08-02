@@ -14,10 +14,6 @@ Install kar lo:
 
 ## 2) Clone the repository
 
-```bash
-git clone <your-repo-url>
-cd PROJECT
-```
 
 ---
 
@@ -32,12 +28,9 @@ python -m venv venv
 
 Windows PowerShell:
 ```powershell
-.\venv\Scripts\Activate.ps1
+.\venv\Scripts\activate
 ```
 
-If PowerShell blocks scripts, run:
-```powershell
-Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
 ```
 
 Then install dependencies:
