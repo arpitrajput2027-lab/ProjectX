@@ -510,7 +510,7 @@ export function ProfileView() {
                   <h2 className="text-lg font-serif font-medium text-ink">LeetCode Analytics</h2>
                 </div>
                 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="flex flex-col gap-6">
                   {/* LeetCode Card */}
                   <div className="bg-white border border-rule-med p-5 rounded-md shadow-sm flex flex-col items-center">
                     <h3 className="font-mono text-xs uppercase tracking-widest text-muted mb-4 border-b border-rule pb-2 w-full text-left">Stats Overview</h3>
@@ -529,11 +529,11 @@ export function ProfileView() {
                   <div className="bg-white border border-rule-med p-5 rounded-md shadow-sm flex flex-col items-center">
                     <h3 className="font-mono text-xs uppercase tracking-widest text-muted mb-4 border-b border-rule pb-2 w-full text-left">Activity Heatmap</h3>
                     {leetcodeUsername ? (
-                      <div className="w-full max-w-[400px] bg-white rounded-md shadow-sm overflow-hidden" style={{ height: "160px", position: "relative" }}>
+                      <div className="w-full bg-white rounded-md shadow-sm overflow-hidden" style={{ aspectRatio: "500 / 120", position: "relative" }}>
                         <img
                           src={`https://leetcard.jacoblin.cool/${leetcodeUsername}?theme=light&font=baloo&ext=heatmap`}
                           alt="LeetCode Heatmap"
-                          style={{ width: "100%", height: "auto", position: "absolute", bottom: 0, left: 0 }}
+                          style={{ width: "100%", height: "auto", position: "absolute", top: 0, left: 0, transform: "translateY(-62.5%)" }}
                         />
                       </div>
                     ) : (
