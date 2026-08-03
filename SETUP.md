@@ -197,18 +197,18 @@ If everything is set up correctly:
 
 ## 9) How to Setup Google Auth + Supabase Setup
 1.	Get your Google Credentials:
-•	Go to the Google Cloud Console.
-•	Create a new project (or select an existing one).
-•	Go to APIs & Services > Credentials.
-•	Click Create Credentials and choose OAuth client ID.
-•	Select Web application as the application type.
-•	For Authorized JavaScript origins, add your local URL: http://localhost:3000 (and your production URL later).
-•	For Authorized redirect URIs, add this exact URL from your Supabase dashboard: https://<your-project-ref>.supabase.co/auth/v1/callback
-•	Copy the generated Client ID and Client Secret.
+-	Go to the Google Cloud Console.
+-	Create a new project (or select an existing one).
+-	Go to APIs & Services > Credentials.
+-	Click Create Credentials and choose OAuth client ID.
+-	Select Web application as the application type.
+-	For Authorized JavaScript origins, add your local URL: http://localhost:3000 (and your production URL later).
+-	For Authorized redirect URIs, add this exact URL from your Supabase dashboard: https://<your-project-ref>.supabase.co/auth/v1/callback
+-	Copy the generated Client ID and Client Secret.
 2.	Enable Google Provider in Supabase:
-•	Open your Supabase Dashboard and go to your project.
-•	Go to Authentication > Providers in the left sidebar.
-•	Find Google in the list and click it.
-•	Toggle Enable Google Provider to ON.
-•	Paste the Client ID and Client Secret you got from Google and Hit Save.
+-	Open your Supabase Dashboard and go to your project.
+-	Go to Authentication > Providers in the left sidebar.
+-	Find Google in the list and click it.
+-	Toggle Enable Google Provider to ON.
+-	Paste the Client ID and Client Secret you got from Google and Hit Save.
 
