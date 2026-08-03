@@ -1,5 +1,6 @@
 import Link from "next/link";
 import React from "react";
+import { UserCircle, FileText, Briefcase } from "lucide-react";
 
 export default function DashboardLayout({
   children,
@@ -9,35 +10,45 @@ export default function DashboardLayout({
   return (
     <div className="flex h-screen bg-cream text-ink font-sans">
       {/* Sidebar */}
-      <aside className="w-64 border-r border-rule flex flex-col">
-        <div className="h-16 flex items-center px-6 border-b border-rule">
-          <h1 className="font-serif text-xl font-medium tracking-tight">ProjectX</h1>
-          <span className="ml-auto text-ink-3">&raquo;</span>
+      <aside className="w-64 bg-ink text-cream flex flex-col shadow-xl z-20">
+        <div className="h-16 flex items-center px-6 border-b border-rule-med bg-ink-2/30">
+          <Briefcase className="w-5 h-5 text-accent mr-3" />
+          <h1 className="font-serif text-xl font-semibold tracking-wide text-cream">ProjectX</h1>
         </div>
-        <nav className="flex flex-col py-4">
+        
+        <nav className="flex flex-col py-6 px-3 space-y-1">
+          <div className="px-3 mb-3 text-xs font-semibold text-muted uppercase tracking-wider">
+            Menu
+          </div>
           <Link
             href="/profile"
-            className="px-6 py-3 border-b border-rule hover:bg-parchment transition-colors font-medium text-sm"
+            className="flex items-center px-3 py-2.5 rounded-md hover:bg-ink-2 transition-colors font-medium text-sm text-cream-2 group"
           >
+            <UserCircle className="w-4 h-4 mr-3 opacity-70 group-hover:opacity-100 group-hover:text-accent" />
             Profile
           </Link>
           <Link
             href="/resume"
-            className="px-6 py-3 border-b border-rule hover:bg-parchment transition-colors font-medium text-sm"
+            className="flex items-center px-3 py-2.5 rounded-md hover:bg-ink-2 transition-colors font-medium text-sm text-cream-2 group"
           >
-            Resume
+            <FileText className="w-4 h-4 mr-3 opacity-70 group-hover:opacity-100 group-hover:text-accent" />
+            Resume Builder
           </Link>
         </nav>
-        <div className="mt-auto border-t border-rule p-4 flex items-center gap-3">
-          <div className="w-8 h-8 rounded-full border border-ink flex items-center justify-center">
-            {/* Avatar Placeholder */}
+        
+        <div className="mt-auto p-4 m-3 rounded-lg bg-ink-2/40 border border-rule-med flex items-center gap-3 hover:bg-ink-2/80 transition-colors cursor-pointer">
+          <div className="w-9 h-9 rounded-full bg-accent text-cream flex items-center justify-center font-bold font-serif text-sm shadow-sm">
+            AV
           </div>
-          <span className="text-sm font-medium">Arpit Verma</span>
+          <div className="flex flex-col">
+            <span className="text-sm font-semibold text-cream">Arpit Verma</span>
+            <span className="text-xs text-muted">Student</span>
+          </div>
         </div>
       </aside>
 
       {/* Main Content */}
-      <main className="flex-1 overflow-auto bg-cream-2">
+      <main className="flex-1 overflow-auto bg-cream-2 relative">
         {children}
       </main>
     </div>

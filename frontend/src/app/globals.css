@@ -40,3 +40,22 @@ body {
   background: var(--background);
   font-family: var(--font-sans), Arial, Helvetica, sans-serif;
 }
+
+/* Editor specific classes for html2canvas compatibility (avoids oklch/lab colors) */
+.editor-link {
+  color: #1e40af !important;
+  text-decoration: underline;
+}
+.editor-hover-area {
+  transition: background-color 0.2s;
+}
+.editor-hover-area:hover {
+  background-color: #f9fafb !important;
+}
+.editor-hover-area:focus {
+  outline: none !important;
+  background-color: #eff6ff !important;
+}
+.editor-border-black {
+  border-color: #000000 !important;
+}
