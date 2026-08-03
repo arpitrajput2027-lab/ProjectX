@@ -201,7 +201,7 @@ export default function EducationModal({ isOpen, onClose, resumeId, initialEduca
           </button>
           <button 
             onClick={handleSaveChanges}
-            className="px-5 py-2 text-sm font-medium bg-text-primary text-white rounded-md hover:bg-black transition-colors"
+            className="px-5 py-2 text-sm font-medium bg-text-primary text-black rounded-md hover:bg-black hover:text-white transition-colors"
           >
             Save Changes
           </button>
