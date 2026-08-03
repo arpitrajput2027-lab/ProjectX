@@ -17,7 +17,7 @@ export function ProfileView() {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [profile, setProfile] = useState<any>(null);
-  
+
   // Drawer state
   const [isStatsDrawerOpen, setIsStatsDrawerOpen] = useState(false);
 
@@ -108,12 +108,12 @@ export function ProfileView() {
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-6xl relative">
-      
+
       {/* Top Banner: Identity & Documents */}
       <div className="mb-12">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-xs font-semibold text-muted uppercase tracking-widest">Identity & Documents</h2>
-          <button 
+          <button
             onClick={() => setIsStatsDrawerOpen(true)}
             className="flex items-center space-x-2 bg-ink text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-accent transition-colors"
           >
@@ -121,7 +121,7 @@ export function ProfileView() {
             <span>Github Leetcode Stats 📊</span>
           </button>
         </div>
-        
+
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div className="bg-white rounded-xl border border-rule-med p-6 flex items-center justify-between shadow-sm">
             <div className="flex items-center space-x-4">
@@ -133,7 +133,7 @@ export function ProfileView() {
                 <p className="text-xs text-ink-3 mt-1 truncate max-w-[200px]">{profile.target_role || "No role set"}</p>
               </div>
             </div>
-            <button className="text-xs font-medium text-ink-3 hover:text-ink flex items-center space-x-1 transition-colors">
+            <button className="text-xs font-medium text-ink-3 hover:text-ink flex items-center space-x-1 cursor-pointer transition-colors">
               <span>Edit</span>
               <ArrowRight className="w-3 h-3" />
             </button>
@@ -149,7 +149,7 @@ export function ProfileView() {
                 <p className="text-xs text-ink-3 mt-1">Wording, order and formatting</p>
               </div>
             </div>
-            <button className="text-xs font-medium text-ink-3 hover:text-ink flex items-center space-x-1 transition-colors">
+            <button className="text-xs font-medium text-ink-3 hover:text-ink flex items-center space-x-1 transition-colors cursor-pointer">
               <span>Preview</span>
               <ArrowRight className="w-3 h-3" />
             </button>
@@ -159,7 +159,7 @@ export function ProfileView() {
 
       {/* Main Layout Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        
+
         {/* Left Column: Profile Details */}
         <div className="lg:col-span-2 space-y-6">
           <h2 className="text-xs font-semibold text-muted uppercase tracking-widest mb-2">Profile Details</h2>
@@ -171,15 +171,15 @@ export function ProfileView() {
                 <span className="w-8 h-8 rounded-full bg-purple-100 flex items-center justify-center text-purple-600 text-sm">🎓</span>
                 <span>Education</span>
               </h3>
-              <button 
+              <button
                 onClick={() => setIsEducationModalOpen(true)}
-                className="flex items-center space-x-2 px-3 py-1.5 rounded-md border border-rule-med hover:bg-cream transition-colors text-sm font-medium text-ink-2"
+                className="flex items-center space-x-2 px-3 py-1.5 rounded-md border border-rule-med hover:bg-cream transition-colors text-sm font-medium text-ink-2 cursor-pointer"
               >
                 <Pencil className="w-4 h-4" />
                 <span>Edit</span>
               </button>
             </div>
-            
+
             <div className="space-y-6">
               {(!profile.education || profile.education.length === 0) && <p className="text-ink-3 text-sm">No education entries found.</p>}
               {profile.education?.map((edu: any, idx: number) => (
@@ -204,15 +204,15 @@ export function ProfileView() {
                 <span className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 text-sm">💼</span>
                 <span>Experience</span>
               </h3>
-              <button 
+              <button
                 onClick={() => setIsExperienceModalOpen(true)}
-                className="flex items-center space-x-2 px-3 py-1.5 rounded-md border border-rule-med hover:bg-cream transition-colors text-sm font-medium text-ink-2"
+                className="flex items-center space-x-2 px-3 py-1.5 rounded-md border border-rule-med hover:bg-cream transition-colors text-sm font-medium text-ink-2 cursor-pointer"
               >
                 <Pencil className="w-4 h-4" />
                 <span>Edit</span>
               </button>
             </div>
-            
+
             <div className="space-y-6">
               {(!profile.experience || profile.experience.length === 0) && <p className="text-ink-3 text-sm">No experience entries found.</p>}
               {profile.experience?.map((exp: any, idx: number) => (
@@ -238,15 +238,15 @@ export function ProfileView() {
                 <span className="w-8 h-8 rounded-full bg-orange-100 flex items-center justify-center text-orange-600 text-sm">🚀</span>
                 <span>Projects</span>
               </h3>
-              <button 
+              <button
                 onClick={() => setIsProjectModalOpen(true)}
-                className="flex items-center space-x-2 px-3 py-1.5 rounded-md border border-rule-med hover:bg-cream transition-colors text-sm font-medium text-ink-2"
+                className="flex items-center space-x-2 px-3 py-1.5 rounded-md border border-rule-med hover:bg-cream transition-colors text-sm font-medium text-ink-2 cursor-pointer"
               >
                 <Pencil className="w-4 h-4" />
                 <span>Edit</span>
               </button>
             </div>
-            
+
             <div className="space-y-6">
               {(!profile.projects || profile.projects.length === 0) && <p className="text-ink-3 text-sm">No project entries found.</p>}
               {profile.projects?.map((proj: any, idx: number) => (
@@ -269,22 +269,22 @@ export function ProfileView() {
                 <span className="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center text-green-600 text-sm">⚙️</span>
                 <span>Skills</span>
               </h3>
-              <button 
+              <button
                 onClick={() => setIsSkillModalOpen(true)}
-                className="flex items-center space-x-2 px-3 py-1.5 rounded-md border border-rule-med hover:bg-cream transition-colors text-sm font-medium text-ink-2"
+                className="flex items-center space-x-2 px-3 py-1.5 rounded-md border border-rule-med hover:bg-cream transition-colors text-sm font-medium text-ink-2 cursor-pointer"
               >
                 <Pencil className="w-4 h-4" />
                 <span>Edit</span>
               </button>
             </div>
-            
+
             <div className="space-y-4">
               {(!profile.skills || profile.skills.length === 0) && <p className="text-ink-3 text-sm">No skills found.</p>}
               {profile.skills?.map((skill: any, idx: number) => (
                 <div key={idx}>
                   <h4 className="text-sm font-medium text-ink capitalize mb-2">{skill.category_name}</h4>
                   <div className="flex flex-wrap gap-2">
-                    {skill.skills_list.split(',').filter((s:string) => s.trim()).map((s: string, sIdx: number) => (
+                    {skill.skills_list.split(',').filter((s: string) => s.trim()).map((s: string, sIdx: number) => (
                       <span key={sIdx} className="bg-cream text-ink-2 border border-rule-med text-xs px-3 py-1 rounded-md">
                         {s.trim()}
                       </span>
@@ -302,15 +302,15 @@ export function ProfileView() {
                 <span className="w-8 h-8 rounded-full bg-yellow-100 flex items-center justify-center text-yellow-600 text-sm">🏆</span>
                 <span>Achievements</span>
               </h3>
-              <button 
+              <button
                 onClick={() => setIsAchievementModalOpen(true)}
-                className="flex items-center space-x-2 px-3 py-1.5 rounded-md border border-rule-med hover:bg-cream transition-colors text-sm font-medium text-ink-2"
+                className="flex items-center space-x-2 px-3 py-1.5 rounded-md border border-rule-med hover:bg-cream transition-colors text-sm font-medium text-ink-2 cursor-pointer"
               >
                 <Pencil className="w-4 h-4" />
                 <span>Edit</span>
               </button>
             </div>
-            
+
             <div className="space-y-6">
               {(!profile.achievements || profile.achievements.length === 0) && <p className="text-ink-3 text-sm">No achievements found.</p>}
               {profile.achievements?.map((ach: any, idx: number) => (
@@ -330,15 +330,15 @@ export function ProfileView() {
                 <span className="w-8 h-8 rounded-full bg-teal-100 flex items-center justify-center text-teal-600 text-sm">📜</span>
                 <span>Certifications</span>
               </h3>
-              <button 
+              <button
                 onClick={() => setIsCertificationModalOpen(true)}
-                className="flex items-center space-x-2 px-3 py-1.5 rounded-md border border-rule-med hover:bg-cream transition-colors text-sm font-medium text-ink-2"
+                className="flex items-center space-x-2 px-3 py-1.5 rounded-md border border-rule-med hover:bg-cream transition-colors text-sm font-medium text-ink-2 cursor-pointer"
               >
                 <Pencil className="w-4 h-4" />
                 <span>Edit</span>
               </button>
             </div>
-            
+
             <div className="space-y-6">
               {(!profile.certifications || profile.certifications.length === 0) && <p className="text-ink-3 text-sm">No certifications found.</p>}
               {profile.certifications?.map((cert: any, idx: number) => (
@@ -367,12 +367,12 @@ export function ProfileView() {
           <div className="bg-white rounded-xl border border-rule-med p-6 shadow-sm sticky top-6">
             <h3 className="font-medium text-ink mb-4 flex items-center justify-between">
               <span>Contact Information</span>
-              <button 
+              <button
                 onClick={handleSubmitContact(onSubmitContact)}
-                className="text-xs text-accent hover:text-accent-dk font-medium flex items-center space-x-1"
+                className="text-xs text-accent hover:text-accent-dk font-medium flex items-center space-x-1 m-2 p-2 rounded-md bg-black text-white cursor-pointer"
               >
                 <Save className="w-3 h-3" />
-                <span>Save</span>
+                <span >Save</span>
               </button>
             </h3>
             <form className="space-y-4">
@@ -403,11 +403,11 @@ export function ProfileView() {
 
       {/* --- STATS DRAWER --- */}
       {isStatsDrawerOpen && (
-        <div 
+        <div
           className="fixed inset-0 z-50 flex justify-end bg-black/40 backdrop-blur-sm"
           onClick={() => setIsStatsDrawerOpen(false)}
         >
-          <div 
+          <div
             className="bg-cream-2 w-full max-w-2xl h-full shadow-2xl flex flex-col animate-in slide-in-from-right duration-300"
             onClick={(e) => e.stopPropagation()}
           >
@@ -420,9 +420,9 @@ export function ProfileView() {
                 <X className="w-6 h-6" />
               </button>
             </div>
-            
+
             <div className="flex-1 overflow-y-auto p-6 space-y-10">
-              
+
               {/* --- GITHUB SECTION --- */}
               <div className="space-y-4">
                 <div className="flex items-center space-x-2 pb-2 border-b border-rule-med">
@@ -509,7 +509,7 @@ export function ProfileView() {
                   <Code className="w-5 h-5 text-yellow-600" />
                   <h2 className="text-lg font-serif font-medium text-ink">LeetCode Analytics</h2>
                 </div>
-                
+
                 <div className="flex flex-col gap-6">
                   {/* LeetCode Card */}
                   <div className="bg-white border border-rule-med p-5 rounded-md shadow-sm flex flex-col items-center">
@@ -549,52 +549,52 @@ export function ProfileView() {
       )}
 
       {/* Modals */}
-      <ProjectModal 
-        isOpen={isProjectModalOpen} 
-        onClose={() => setIsProjectModalOpen(false)} 
-        resumeId={profile.id} 
-        initialProjects={profile.projects || []} 
-        onSave={(data) => handleSaveSection("projects", data)} 
-      />
-      
-      <EducationModal 
-        isOpen={isEducationModalOpen} 
-        onClose={() => setIsEducationModalOpen(false)} 
-        resumeId={profile.id} 
-        initialEducation={profile.education || []} 
-        onSave={(data) => handleSaveSection("education", data)} 
-      />
-      
-      <ExperienceModal 
-        isOpen={isExperienceModalOpen} 
-        onClose={() => setIsExperienceModalOpen(false)} 
-        resumeId={profile.id} 
-        initialExperience={profile.experience || []} 
-        onSave={(data) => handleSaveSection("experience", data)} 
-      />
-      
-      <SkillModal 
-        isOpen={isSkillModalOpen} 
-        onClose={() => setIsSkillModalOpen(false)} 
-        resumeId={profile.id} 
-        initialSkills={profile.skills || []} 
-        onSave={(data) => handleSaveSection("skills", data)} 
+      <ProjectModal
+        isOpen={isProjectModalOpen}
+        onClose={() => setIsProjectModalOpen(false)}
+        resumeId={profile.id}
+        initialProjects={profile.projects || []}
+        onSave={(data) => handleSaveSection("projects", data)}
       />
 
-      <AchievementModal 
-        isOpen={isAchievementModalOpen} 
-        onClose={() => setIsAchievementModalOpen(false)} 
-        resumeId={profile.id} 
-        initialAchievements={profile.achievements || []} 
-        onSave={(data) => handleSaveSection("achievements", data)} 
+      <EducationModal
+        isOpen={isEducationModalOpen}
+        onClose={() => setIsEducationModalOpen(false)}
+        resumeId={profile.id}
+        initialEducation={profile.education || []}
+        onSave={(data) => handleSaveSection("education", data)}
       />
-      
-      <CertificationModal 
-        isOpen={isCertificationModalOpen} 
-        onClose={() => setIsCertificationModalOpen(false)} 
-        resumeId={profile.id} 
-        initialCertifications={profile.certifications || []} 
-        onSave={(data) => handleSaveSection("certifications", data)} 
+
+      <ExperienceModal
+        isOpen={isExperienceModalOpen}
+        onClose={() => setIsExperienceModalOpen(false)}
+        resumeId={profile.id}
+        initialExperience={profile.experience || []}
+        onSave={(data) => handleSaveSection("experience", data)}
+      />
+
+      <SkillModal
+        isOpen={isSkillModalOpen}
+        onClose={() => setIsSkillModalOpen(false)}
+        resumeId={profile.id}
+        initialSkills={profile.skills || []}
+        onSave={(data) => handleSaveSection("skills", data)}
+      />
+
+      <AchievementModal
+        isOpen={isAchievementModalOpen}
+        onClose={() => setIsAchievementModalOpen(false)}
+        resumeId={profile.id}
+        initialAchievements={profile.achievements || []}
+        onSave={(data) => handleSaveSection("achievements", data)}
+      />
+
+      <CertificationModal
+        isOpen={isCertificationModalOpen}
+        onClose={() => setIsCertificationModalOpen(false)}
+        resumeId={profile.id}
+        initialCertifications={profile.certifications || []}
+        onSave={(data) => handleSaveSection("certifications", data)}
       />
 
     </div>
