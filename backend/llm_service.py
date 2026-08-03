@@ -2,6 +2,8 @@ import os
 import json
 from dotenv import load_dotenv
 from groq import Groq
+import warnings
+warnings.filterwarnings("ignore", category=FutureWarning)
 import google.generativeai as genai
 from pydantic import BaseModel, Field
 from typing import List, Optional

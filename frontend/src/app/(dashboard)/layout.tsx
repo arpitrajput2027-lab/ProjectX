@@ -1,6 +1,8 @@
+"use client";
+
 import Link from "next/link";
 import React from "react";
-import { UserCircle, FileText, Briefcase } from "lucide-react";
+import { UserCircle, FileText, Briefcase, Shield } from "lucide-react";
 
 export default function DashboardLayout({
   children,
@@ -33,6 +35,13 @@ export default function DashboardLayout({
           >
             <FileText className="w-4 h-4 mr-3 opacity-70 group-hover:opacity-100 group-hover:text-accent" />
             Resume Builder
+          </Link>
+          <Link
+            href="/resume?tab=ats"
+            className="flex items-center px-3 py-2.5 rounded-md hover:bg-ink-2 transition-colors font-medium text-sm text-cream-2 group"
+          >
+            <Shield className="w-4 h-4 mr-3 opacity-70 group-hover:opacity-100 group-hover:text-accent" />
+            ATS & JD Tools
           </Link>
         </nav>
         
