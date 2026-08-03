@@ -212,3 +212,5 @@ If everything is set up correctly:
 -	Toggle Enable Google Provider to ON.
 -	Paste the Client ID and Client Secret you got from Google and Hit Save.
 
+Team Collaboration Setup 
+Bhavneesh : 

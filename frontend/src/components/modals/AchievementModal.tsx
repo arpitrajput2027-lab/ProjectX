@@ -113,7 +113,7 @@ export default function AchievementModal({ isOpen, onClose, initialAchievements,
 
         <div className="p-6 bg-white border-t border-rule-med flex justify-end gap-3">
           <button onClick={onClose} className="px-6 py-2 rounded-md font-mono text-xs uppercase tracking-widest border border-rule-med text-ink hover:bg-cream transition-colors">Cancel</button>
-          <button onClick={handleSave} className="px-6 py-2 rounded-md font-mono text-xs uppercase tracking-widest bg-ink text-cream hover:bg-accent transition-colors">Save Changes</button>
+          <button onClick={handleSave} className="px-6 py-2 rounded-md font-mono text-xs uppercase md:text-black tracking-widest bg-ink text-black hover:bg-accent transition-colors">Save Changes</button>
         </div>
       </div>
     </div>
