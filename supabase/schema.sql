@@ -101,3 +101,31 @@ CREATE TABLE applications (
     created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
 );
+
+-- ATS Check History
+CREATE TABLE ats_checks (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID REFERENCES users(id) ON DELETE CASCADE,
+    overall_score INTEGER NOT NULL,
+    dimension_scores JSONB DEFAULT '{}',
+    missing_keywords JSONB DEFAULT '[]',
+    recommendations JSONB DEFAULT '[]',
+    strengths JSONB DEFAULT '[]',
+    weaknesses JSONB DEFAULT '[]',
+    checked_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
+);
+
+-- JD Match History  
+CREATE TABLE jd_matches (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID REFERENCES users(id) ON DELETE CASCADE,
+    job_description_text TEXT NOT NULL,
+    job_title TEXT,
+    company_name TEXT,
+    overall_match_score INTEGER NOT NULL,
+    readiness_score INTEGER NOT NULL,
+    matched_skills JSONB DEFAULT '[]',
+    missing_skills JSONB DEFAULT '[]',
+    recommendations JSONB DEFAULT '[]',
+    matched_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
+);
