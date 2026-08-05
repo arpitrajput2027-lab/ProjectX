@@ -90,7 +90,21 @@ export default function AuthModal({ isOpen, onClose, defaultMode = "signup", tar
         }
       } else {
         // Recruiter flow
-        router.push("/recruiter-dashboard");
+        const { data: profile, error: profileError } = await supabase
+          .from("recruiter_profiles")
+          .select("id")
+          .eq("user_id", currentSessionUser.id)
+          .maybeSingle();
+
+        if (profileError) {
+          console.error("Recruiter profile check error:", profileError);
+        }
+
+        if (profile) {
+          router.push("/recruiter-dashboard");
+        } else {
+          router.push("/recruiter-onboarding");
+        }
       }
       onClose();
     } catch (err: any) {

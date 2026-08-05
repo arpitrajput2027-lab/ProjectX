@@ -99,8 +99,39 @@ CREATE TABLE applications (
     applied_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL,
     notes TEXT,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL,
-    updated_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL,
+    UNIQUE(student_id, job_id)
 );
+
+-- ALTER TABLE applications ADD CONSTRAINT unique_student_job UNIQUE (student_id, job_id);
+
+
+
+
+
+
+
+-- #02 altered the Tables
+-- Changed**
+ALTER TABLE student_profiles
+ADD COLUMN education JSONB DEFAULT '[]',
+ADD COLUMN experience JSONB DEFAULT '[]',
+ADD COLUMN projects JSONB DEFAULT '[]',
+ADD COLUMN skills JSONB DEFAULT '[]';
+
+ALTER TABLE student_profiles 
+ADD COLUMN achievements JSONB DEFAULT '[]',
+ADD COLUMN certifications JSONB DEFAULT '[]';
+
+
+
+
+
+
+
+
+
+-- #03 bhavneesh added the tabled ats and jd
 
 -- ATS Check History
 CREATE TABLE ats_checks (
@@ -128,4 +159,14 @@ CREATE TABLE jd_matches (
     missing_skills JSONB DEFAULT '[]',
     recommendations JSONB DEFAULT '[]',
     matched_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
+);
+
+
+-- #04 Saved Candidates (Recruiter bookmarks)
+CREATE TABLE saved_candidates (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    recruiter_id UUID REFERENCES recruiter_profiles(id) ON DELETE CASCADE,
+    student_id UUID REFERENCES student_profiles(id) ON DELETE CASCADE,
+    saved_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL,
+    UNIQUE(recruiter_id, student_id)
 );
