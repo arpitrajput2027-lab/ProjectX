@@ -9,3 +9,5 @@ groq
 google-generativeai
 PyMuPDF
 python-multipart
+ddgs==9.0.0
+requests==2.32.3

@@ -65,7 +65,7 @@ export function ResumeEditor({ id = "me" }: { id?: string }) {
         image:        { type: 'jpeg', quality: 0.98 },
         html2canvas:  { scale: 2, useCORS: true },
         jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
-      };
+      } as any;
       await html2pdf().set(opt).from(resumeRef.current).save();
     } catch (error) {
       console.error("Export failed", error);
