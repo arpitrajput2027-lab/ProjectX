@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import React from "react";
-import { UserCircle, FileText, Briefcase, Shield } from "lucide-react";
+import { UserCircle, FileText, Briefcase, Shield, CheckCircle } from "lucide-react";
 
 export default function DashboardLayout({
   children,
@@ -42,6 +42,20 @@ export default function DashboardLayout({
           >
             <Shield className="w-4 h-4 mr-3 opacity-70 group-hover:opacity-100 group-hover:text-accent" />
             ATS & JD Tools
+          </Link>
+          <Link
+            href="/jobs"
+            className="flex items-center px-3 py-2.5 rounded-md hover:bg-ink-2 transition-colors font-medium text-sm text-cream-2 group"
+          >
+            <Briefcase className="w-4 h-4 mr-3 opacity-70 group-hover:opacity-100 group-hover:text-accent" />
+            Jobs on ReadyIndex
+          </Link>
+          <Link
+            href="/applications"
+            className="flex items-center px-3 py-2.5 rounded-md hover:bg-ink-2 transition-colors font-medium text-sm text-cream-2 group"
+          >
+            <CheckCircle className="w-4 h-4 mr-3 opacity-70 group-hover:opacity-100 group-hover:text-accent" />
+            My Applications
           </Link>
         </nav>
         
