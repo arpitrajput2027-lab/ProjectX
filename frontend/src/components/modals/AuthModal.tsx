@@ -234,7 +234,7 @@ export default function AuthModal({ isOpen, onClose, defaultMode = "signup", tar
           <button 
             onClick={handleGoogleAuth}
             type="button"
-            className="w-full flex items-center justify-center gap-2 bg-white border border-rule-med text-ink font-mono text-[11px] tracking-widest uppercase py-3 rounded-md hover:bg-[#f7f3ec] transition-colors"
+            className="w-full flex items-center justify-center gap-2 bg-white border border-rule-med text-ink font-mono text-[11px] tracking-widest uppercase py-3 rounded-md hover:bg-[#f7f3ec] transition-colors cursor-pointer"
           >
             <svg className="w-4 h-4" viewBox="0 0 24 24">
               <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4" />
@@ -245,16 +245,16 @@ export default function AuthModal({ isOpen, onClose, defaultMode = "signup", tar
             Continue with Google
           </button>
 
-          <div className="mt-6 text-center text-xs text-ink-3">
+          <div className="mt-6  cursor-pointer text-center text-xs text-ink-3">
             {authMode === "signup" ? (
               <>
                 Already have an account?{" "}
-                <button onClick={() => setAuthMode("login")} className="text-accent hover:underline font-medium">Log in</button>
+                <button onClick={() => setAuthMode("login")} className="text-accent cursor-pointer hover:underline font-medium">Log in</button>
               </>
             ) : (
               <>
                 Don't have an account?{" "}
-                <button onClick={() => setAuthMode("signup")} className="text-accent hover:underline font-medium">Sign up</button>
+                <button onClick={() => setAuthMode("signup")} className="text-accent cursor-pointer hover:underline font-medium">Sign up</button>
               </>
             )}
           </div>
