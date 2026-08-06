@@ -37,6 +37,7 @@ export default function FilterBar({ filters, onChange, onRefresh, refreshing }: 
           Keyword
         </label>
         <input
+          suppressHydrationWarning
           type="text"
           value={filters.keyword}
           onChange={(e) => update({ keyword: e.target.value })}
@@ -50,6 +51,7 @@ export default function FilterBar({ filters, onChange, onRefresh, refreshing }: 
           Location
         </label>
         <input
+          suppressHydrationWarning
           type="text"
           value={filters.location}
           onChange={(e) => update({ location: e.target.value })}
@@ -63,6 +65,7 @@ export default function FilterBar({ filters, onChange, onRefresh, refreshing }: 
           Work mode
         </label>
         <select
+          suppressHydrationWarning
           value={filters.workMode}
           onChange={(e) => update({ workMode: e.target.value })}
           className="border border-rule-med rounded-lg px-3 py-2 text-sm bg-cream focus:border-accent outline-none text-ink w-full lg:w-auto transition-colors cursor-pointer"
@@ -84,6 +87,7 @@ export default function FilterBar({ filters, onChange, onRefresh, refreshing }: 
             const active = sortBy === opt.value;
             return (
               <button
+                suppressHydrationWarning
                 key={opt.value}
                 type="button"
                 onClick={() => update({ sortBy: opt.value })}
@@ -102,6 +106,7 @@ export default function FilterBar({ filters, onChange, onRefresh, refreshing }: 
       </div>
 
       <button
+        suppressHydrationWarning
         type="button"
         onClick={onRefresh}
         disabled={refreshing}
