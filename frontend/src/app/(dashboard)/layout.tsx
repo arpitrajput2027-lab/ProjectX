@@ -8,6 +8,7 @@ import {
   Briefcase,
   Shield,
   CheckCircle,
+  Target,
 } from "lucide-react";
 
 export default function DashboardLayout({
@@ -53,6 +54,14 @@ export default function DashboardLayout({
           >
             <Shield className="w-4 h-4 mr-3 opacity-70 group-hover:opacity-100 group-hover:text-accent" />
             ATS & JD Tools
+          </Link>
+
+          <Link
+            href="/readyindex-jobs"
+            className="flex items-center px-3 py-2.5 rounded-md hover:bg-ink-2 transition-colors font-medium text-sm text-cream-2 group"
+          >
+            <Target className="w-4 h-4 mr-3 opacity-70 group-hover:opacity-100 group-hover:text-accent" />
+            Jobs on ReadyIndex
           </Link>
 
           <Link
