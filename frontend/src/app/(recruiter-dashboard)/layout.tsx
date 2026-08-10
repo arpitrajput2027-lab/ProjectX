@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
-import { Users, Briefcase, Building, LogOut } from "lucide-react";
+import { Users, Briefcase, Building, LogOut, FileText, Calendar } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
 
@@ -67,6 +67,20 @@ export default function RecruiterDashboardLayout({
           >
             <Briefcase className="w-4 h-4 mr-3 opacity-70 group-hover:opacity-100 group-hover:text-accent" />
             Active Jobs
+          </Link>
+          <Link
+            href="/recruiter-dashboard/bulk-resume"
+            className="flex items-center px-3 py-2.5 rounded-md hover:bg-ink-2 transition-colors font-medium text-sm text-cream-2 group"
+          >
+            <FileText className="w-4 h-4 mr-3 opacity-70 group-hover:opacity-100 group-hover:text-accent" />
+            Bulk Resume
+          </Link>
+          <Link
+            href="/recruiter-dashboard/interviews"
+            className="flex items-center px-3 py-2.5 rounded-md hover:bg-ink-2 transition-colors font-medium text-sm text-cream-2 group"
+          >
+            <Calendar className="w-4 h-4 mr-3 opacity-70 group-hover:opacity-100 group-hover:text-accent" />
+            Interview
           </Link>
           <Link
             href="/recruiter-dashboard/talent"

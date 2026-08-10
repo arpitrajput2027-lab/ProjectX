@@ -170,3 +170,19 @@ CREATE TABLE saved_candidates (
     saved_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL,
     UNIQUE(recruiter_id, student_id)
 );
+
+-- #05 Interviews Table
+CREATE TABLE interviews (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    application_id UUID REFERENCES applications(id) ON DELETE CASCADE,
+    scheduled_at TIMESTAMP WITH TIME ZONE NOT NULL,
+    duration_minutes INTEGER DEFAULT 60,
+    meeting_link TEXT,
+    interviewer_name TEXT NOT NULL,
+    status TEXT DEFAULT 'SCHEDULED' CHECK (status IN ('SCHEDULED', 'COMPLETED', 'CANCELLED')),
+    rating INTEGER CHECK (rating BETWEEN 1 AND 5),
+    feedback_text TEXT,
+    recommendation TEXT CHECK (recommendation IN ('STRONG_HIRE', 'HIRE', 'NO_HIRE')),
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
+);
