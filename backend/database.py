@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 url: str = os.environ.get("SUPABASE_URL", "")
-key: str = os.environ.get("SUPABASE_SERVICE_ROLE_KEY", os.environ.get("SUPABASE_ANON_KEY", ""))
+key: str = os.environ.get("SUPABASE_SERVICE_ROLE_KEY", os.environ.get("SUPABASE_KEY", os.environ.get("SUPABASE_ANON_KEY", "")))
 
 # Depending on your setup, you can also use SQLAlchemy to connect to Postgres directly.
 # For now, we initialize the Supabase client.

@@ -46,8 +46,8 @@ export function ProfileView({ studentId, readOnly }: { studentId?: string; readO
       const { data, error } = await supabase
         .from("student_profiles")
         .select("*")
-        .eq("user_id", targetUserId)
-        .single();
+        .or(`user_id.eq.${targetUserId},id.eq.${targetUserId}`)
+        .maybeSingle();
 
       if (error || !data) {
         // Redirect to onboarding if they don't have a profile
