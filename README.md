@@ -1,4 +1,4 @@
-# AI Career OS — ReadyIndex Platform
+# AI Career OS — ReadyIndex Platform.
 
 > **Built by:** Arpit Rajput Lodhi · Bhavneesh · [@arpitrajput2027-lab](https://github.com/arpitrajput2027-lab)
 
