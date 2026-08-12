@@ -1,28 +1,26 @@
-
-/* blue white theme */
 @import "tailwindcss";
 
 @theme {
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 
-  /* Clean Modern Pure White & Black Theme */
-  --color-cream: #ffffff;
-  --color-cream-2: #f8fafc;
-  --color-cream-3: #f1f5f9;
-  --color-cream-4: #e2e8f0;
-  --color-parchment: #f8fafc;
-  --color-ink: #0f172a;
-  --color-ink-2: #1e293b;
-  --color-ink-3: #475569;
-  --color-muted: #64748b;
-  --color-accent: #0f172a;
-  --color-accent-lt: rgba(15, 23, 42, 0.05);
-  --color-accent-mid: rgba(15, 23, 42, 0.1);
-  --color-success: #166534;
-  --color-success-lt: rgba(22, 101, 52, 0.08);
-  --color-rule: rgba(0, 0, 0, 0.08);
-  --color-rule-med: rgba(0, 0, 0, 0.14);
+  /* ReadyIndex / AI Career OS Colors */
+  --color-cream: #faf8f4;
+  --color-cream-2: #f4f0e8;
+  --color-cream-3: #ede8dd;
+  --color-cream-4: #e2dbd0;
+  --color-parchment: #f7f3ec;
+  --color-ink: #1a1814;
+  --color-ink-2: #3d3a35;
+  --color-ink-3: #6b6760;
+  --color-muted: #9b9690;
+  --color-accent: #8b6a3e;
+  --color-accent-lt: rgba(139,106,62,0.08);
+  --color-accent-mid: rgba(139,106,62,0.15);
+  --color-success: #5f7350;
+  --color-success-lt: rgba(95,115,80,0.09);
+  --color-rule: rgba(26,24,20,0.12);
+  --color-rule-med: rgba(26,24,20,0.20);
 }
 
 :root {

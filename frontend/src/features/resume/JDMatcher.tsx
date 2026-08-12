@@ -51,28 +51,13 @@ interface CustomizationResult {
 }
 
 export function JDMatcher({ profileData, onApplyCustomization, onSwitchToATS }: JDMatcherProps) {
-  // Load initial data from localStorage if available
-  const [phase, setPhase] = useState<1 | 2 | 3>(() => {
-    if (typeof window !== "undefined") {
-      const saved = localStorage.getItem("projectx_jd_phase");
-      if (saved) return Number(saved) as 1 | 2 | 3;
-    }
-    return 1;
-  });
+  // Phase state: 1 = Input, 2 = Results, 3 = Customization
+  const [phase, setPhase] = useState<1 | 2 | 3>(1);
   
   // Input Phase State
-  const [jobTitle, setJobTitle] = useState(() => {
-    if (typeof window !== "undefined") return localStorage.getItem("projectx_jd_jobTitle") || "";
-    return "";
-  });
-  const [company, setCompany] = useState(() => {
-    if (typeof window !== "undefined") return localStorage.getItem("projectx_jd_company") || "";
-    return "";
-  });
-  const [jdText, setJdText] = useState(() => {
-    if (typeof window !== "undefined") return localStorage.getItem("projectx_jd_jdText") || "";
-    return "";
-  });
+  const [jobTitle, setJobTitle] = useState("");
+  const [company, setCompany] = useState("");
+  const [jdText, setJdText] = useState("");
   
   // Loading & Error states
   const [isAnalyzing, setIsAnalyzing] = useState(false);
@@ -80,36 +65,8 @@ export function JDMatcher({ profileData, onApplyCustomization, onSwitchToATS }: 
   const [error, setError] = useState<string | null>(null);
   
   // Result States
-  const [matchAnalysis, setMatchAnalysis] = useState<MatchAnalysis | null>(() => {
-    if (typeof window !== "undefined") {
-      const saved = localStorage.getItem("projectx_jd_matchAnalysis");
-      if (saved) {
-        try { return JSON.parse(saved); } catch (e) { console.error(e); }
-      }
-    }
-    return null;
-  });
-  const [customizationResult, setCustomizationResult] = useState<CustomizationResult | null>(() => {
-    if (typeof window !== "undefined") {
-      const saved = localStorage.getItem("projectx_jd_customizationResult");
-      if (saved) {
-        try { return JSON.parse(saved); } catch (e) { console.error(e); }
-      }
-    }
-    return null;
-  });
-
-  // Sync to localStorage
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      localStorage.setItem("projectx_jd_phase", String(phase));
-      localStorage.setItem("projectx_jd_jobTitle", jobTitle);
-      localStorage.setItem("projectx_jd_company", company);
-      localStorage.setItem("projectx_jd_jdText", jdText);
-      if (matchAnalysis) localStorage.setItem("projectx_jd_matchAnalysis", JSON.stringify(matchAnalysis));
-      if (customizationResult) localStorage.setItem("projectx_jd_customizationResult", JSON.stringify(customizationResult));
-    }
-  }, [phase, jobTitle, company, jdText, matchAnalysis, customizationResult]);
+  const [matchAnalysis, setMatchAnalysis] = useState<MatchAnalysis | null>(null);
+  const [customizationResult, setCustomizationResult] = useState<CustomizationResult | null>(null);
 
   const handleAnalyze = async () => {
     if (jdText.length < 50) return;

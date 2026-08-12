@@ -66,30 +66,16 @@ export default function PostJobModal({ isOpen, onClose, recruiterId, companyId, 
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
       <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose}></div>
-<<<<<<< HEAD
       <div className="relative bg-white w-full max-w-2xl rounded-xl shadow-2xl border border-rule-med flex flex-col max-h-[90vh] animate-in fade-in zoom-in-95 duration-200">
         
         <div className="flex items-center justify-between p-5 border-b border-rule-lt bg-cream sticky top-0 z-10 rounded-t-xl">
-=======
-      <div className="relative w-full max-w-2xl rounded-xl shadow-2xl border border-rule-med flex flex-col max-h-[90vh] animate-in fade-in zoom-in-95 duration-200 bg-gradient-to-br from-white via-white to-cream overflow-hidden">
-
-        {/* Decorative ambient glow */}
-        <div className="pointer-events-none absolute -top-20 -right-20 w-64 h-64 rounded-full bg-accent/10 blur-3xl" />
-        <div className="pointer-events-none absolute -bottom-24 -left-16 w-64 h-64 rounded-full bg-accent/5 blur-3xl" />
-
-        <div className="relative flex items-center justify-between p-5 border-b border-rule-lt bg-cream/70 backdrop-blur-sm sticky top-0 z-10 rounded-t-xl">
->>>>>>> feature/design
           <div className="font-mono text-[10px] tracking-widest uppercase text-ink-3">Post a New Job</div>
           <button onClick={onClose} className="text-ink-3 hover:text-ink transition-colors">
             <X className="w-5 h-5" />
           </button>
         </div>
 
-<<<<<<< HEAD
         <div className="p-6 overflow-y-auto">
-=======
-        <div className="relative p-6 overflow-y-auto">
->>>>>>> feature/design
           {error && <div className="mb-4 text-xs text-red-500 bg-red-50 p-3 rounded border border-red-100">{error}</div>}
           
           <form id="post-job-form" onSubmit={handleSubmit} className="space-y-5">
@@ -184,11 +170,7 @@ export default function PostJobModal({ isOpen, onClose, recruiterId, companyId, 
           </form>
         </div>
 
-<<<<<<< HEAD
         <div className="p-5 border-t border-rule-lt bg-cream sticky bottom-0 rounded-b-xl flex justify-end gap-3">
-=======
-        <div className="relative p-5 border-t border-rule-lt bg-cream/70 backdrop-blur-sm sticky bottom-0 rounded-b-xl flex justify-end gap-3">
->>>>>>> feature/design
           <button 
             type="button" 
             onClick={onClose}
@@ -209,8 +191,4 @@ export default function PostJobModal({ isOpen, onClose, recruiterId, companyId, 
       </div>
     </div>
   );
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> feature/design

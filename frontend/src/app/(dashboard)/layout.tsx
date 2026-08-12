@@ -1,12 +1,7 @@
 "use client";
 
 import Link from "next/link";
-<<<<<<< HEAD
 import React from "react";
-=======
-import React, { useEffect, useState } from "react";
-import { supabase } from "@/lib/supabase";
->>>>>>> feature/design
 import {
   UserCircle,
   FileText,
@@ -21,35 +16,6 @@ export default function DashboardLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const [userName, setUserName] = useState<string>("Student");
-  const [initials, setInitials] = useState<string>("S");
-
-  useEffect(() => {
-    async function loadUser() {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (session?.user) {
-        const { data: profile } = await supabase
-          .from("student_profiles")
-          .select("full_name")
-          .eq("user_id", session.user.id)
-          .single();
-
-        const name = profile?.full_name || session.user.user_metadata?.first_name || session.user.email?.split("@")[0] || "Student";
-        setUserName(name);
-        
-        const computedInitials = name
-          .split(" ")
-          .filter(Boolean)
-          .map((n: string) => n[0])
-          .join("")
-          .toUpperCase()
-          .slice(0, 2) || "S";
-        setInitials(computedInitials);
-      }
-    }
-    loadUser();
-  }, []);
-
   return (
     <div className="flex h-screen bg-cream text-ink font-sans">
       {/* Sidebar */}
@@ -117,17 +83,11 @@ export default function DashboardLayout({
 
         <div className="mt-auto p-4 m-3 rounded-lg bg-ink-2/40 border border-rule-med flex items-center gap-3 hover:bg-ink-2/80 transition-colors cursor-pointer">
           <div className="w-9 h-9 rounded-full bg-accent text-cream flex items-center justify-center font-bold font-serif text-sm shadow-sm">
-            {initials}
+            AV
           </div>
-<<<<<<< HEAD
           <div className="flex flex-col">
             <span className="text-sm font-semibold text-cream">
               Arpit Verma
-=======
-          <div className="flex flex-col overflow-hidden">
-            <span className="text-sm font-semibold text-cream truncate">
-              {userName}
->>>>>>> feature/design
             </span>
             <span className="text-xs text-muted">Student</span>
           </div>

@@ -19,7 +19,7 @@ export default function JobsFeed() {
     keyword: "",
     location: "",
     workMode: "any",
-    sortBy: "best_match",
+    sortBy: "latest",
   });
 
   const load = useCallback(async () => {
