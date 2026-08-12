@@ -130,7 +130,7 @@ export function RecruiterLandingPage() {
         </section>
 
         {/* --- PIPELINE FLOW --- */}
-        <section id="pipeline" className="py-24 bg-[#f4f0e8] border-y border-rule-lt">
+        <section id="pipeline" className="py-24 bg-slate-50 border-y border-rule-lt">
           <div className="max-w-6xl mx-auto px-6 md:px-12">
             <div className="font-mono text-[10px] tracking-widest uppercase text-muted mb-8 pb-4 border-b border-rule-lt">— 01 / The Pipeline</div>
             <h2 className="font-serif text-4xl md:text-5xl font-light leading-tight text-ink mb-16 text-center">
@@ -166,7 +166,7 @@ export function RecruiterLandingPage() {
                 { icon: <Mail />, title: "Automated Bulk Email", desc: "Select 50 shortlisted candidates and send a customized assessment invite in one click. Dynamic templates insert names and roles automatically." },
                 { icon: <BarChart />, title: "Pipeline Analytics", desc: "Track your entire funnel on a centralized dashboard. See application drop-offs, average match scores, and hiring velocity in real time." },
               ].map((feat, i) => (
-                <div key={i} className={`p-8 border-b border-rule-lt ${i % 3 !== 2 ? 'lg:border-r' : ''} ${i % 2 === 0 ? 'md:border-r' : ''} hover:bg-[#f4f0e8] hover:border-l-2 hover:border-l-accent transition-all`}>
+                <div key={i} className={`p-8 border-b border-rule-lt ${i % 3 !== 2 ? 'lg:border-r' : ''} ${i % 2 === 0 ? 'md:border-r' : ''} hover:bg-slate-50 hover:border-l-2 hover:border-l-accent transition-all`}>
                   <div className="text-accent mb-4">{feat.icon}</div>
                   <h3 className="font-serif text-lg text-ink mb-2">{feat.title}</h3>
                   <p className="text-sm text-ink-3 leading-relaxed">{feat.desc}</p>

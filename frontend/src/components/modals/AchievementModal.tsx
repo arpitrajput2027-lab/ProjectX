@@ -48,19 +48,24 @@ export default function AchievementModal({ isOpen, onClose, initialAchievements,
 
   return (
     <div className="fixed inset-0 z-50 flex justify-end bg-black/40 backdrop-blur-sm">
-      <div className="bg-cream-2 w-full max-w-xl h-full shadow-2xl flex flex-col animate-in slide-in-from-right duration-300">
-        <div className="flex items-center justify-between p-6 bg-white border-b border-rule-med">
+      <div className="relative w-full max-w-xl h-full shadow-2xl flex flex-col animate-in slide-in-from-right duration-300 bg-gradient-to-b from-white via-cream-2 to-cream-2 overflow-hidden">
+
+        {/* Decorative ambient glow */}
+        <div className="pointer-events-none absolute -top-24 -left-24 w-72 h-72 rounded-full bg-accent/10 blur-3xl" />
+        <div className="pointer-events-none absolute -bottom-32 -right-16 w-72 h-72 rounded-full bg-accent/5 blur-3xl" />
+
+        <div className="relative flex items-center justify-between p-6 bg-white/70 backdrop-blur-sm border-b border-rule-med">
           <h2 className="text-xl font-serif font-medium text-ink">Edit Achievements</h2>
           <button onClick={onClose} className="text-ink-3 hover:text-ink"><X className="w-6 h-6" /></button>
         </div>
         
-        <div className="flex-1 overflow-y-auto p-6 space-y-8">
+        <div className="relative flex-1 overflow-y-auto p-6 space-y-8">
           {achievements.length === 0 && (
             <p className="text-sm text-ink-3 text-center py-8">No achievements added. Click below to add one.</p>
           )}
 
           {achievements.map((ach, idx) => (
-            <div key={idx} className="bg-white p-5 rounded-md border border-rule-med shadow-sm relative group">
+            <div key={idx} className="bg-white/90 backdrop-blur-sm p-5 rounded-md border border-rule-med shadow-sm relative group">
               <button 
                 onClick={() => removeAchievement(idx)}
                 className="absolute top-4 right-4 text-ink-3 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity"
@@ -111,7 +116,7 @@ export default function AchievementModal({ isOpen, onClose, initialAchievements,
           </button>
         </div>
 
-        <div className="p-6 bg-white border-t border-rule-med flex justify-end gap-3">
+        <div className="relative p-6 bg-white/70 backdrop-blur-sm border-t border-rule-med flex justify-end gap-3">
           <button onClick={onClose} className="px-6 py-2 rounded-md font-mono text-xs uppercase tracking-widest border border-rule-med text-ink hover:bg-cream transition-colors">Cancel</button>
           <button onClick={handleSave} className="px-6 py-2 rounded-md font-mono text-xs uppercase tracking-widest bg-ink text-cream hover:bg-accent transition-colors">Save Changes</button>
         </div>
