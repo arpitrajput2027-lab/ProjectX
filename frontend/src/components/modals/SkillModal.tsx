@@ -56,10 +56,14 @@ export default function SkillModal({ isOpen, onClose, resumeId, initialSkills, o
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
-      <div className="bg-card w-full max-w-4xl h-[80vh] rounded-xl shadow-2xl flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-200">
-        
+      <div className="relative w-full max-w-4xl h-[80vh] rounded-2xl shadow-2xl flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-200 bg-gradient-to-br from-white via-card to-cream ring-1 ring-black/[0.04]">
+
+        {/* Decorative ambient glow — subtle, sits behind everything */}
+        <div className="pointer-events-none absolute -top-24 -right-24 w-72 h-72 rounded-full bg-accent/10 blur-3xl" />
+        <div className="pointer-events-none absolute -bottom-32 -left-16 w-72 h-72 rounded-full bg-accent/5 blur-3xl" />
+
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-border-light bg-card">
+        <div className="relative flex items-center justify-between p-6 border-b border-border-light bg-white/60 backdrop-blur-sm">
           <h2 className="text-xl font-semibold font-serif">Edit Skills</h2>
           <button onClick={onClose} className="text-text-muted hover:text-text-primary transition-colors">
             <X className="w-5 h-5" />
@@ -67,14 +71,14 @@ export default function SkillModal({ isOpen, onClose, resumeId, initialSkills, o
         </div>
 
         {/* Content */}
-        <div className="flex flex-1 overflow-hidden">
+        <div className="relative flex flex-1 overflow-hidden">
           {/* Sidebar */}
-          <div className="w-1/3 border-r border-border-light bg-cream flex flex-col">
+          <div className="w-1/3 border-r border-border-light bg-gradient-to-b from-cream to-cream/70 flex flex-col">
             <div className="flex-1 overflow-y-auto p-4 space-y-2">
               {skillCategories.map((skill, idx) => (
                 <div 
                   key={idx} 
-                  className={`flex items-center justify-between p-3 rounded-lg cursor-pointer transition-colors ${idx === selectedIndex ? 'bg-white shadow-sm border border-border-light' : 'hover:bg-card-hover border border-transparent'}`}
+                  className={`flex items-center justify-between p-3 rounded-lg cursor-pointer transition-all ${idx === selectedIndex ? 'bg-white shadow-sm border border-border-light ring-1 ring-accent/10' : 'hover:bg-card-hover border border-transparent'}`}
                   onClick={() => setSelectedIndex(idx)}
                 >
                   <div className="flex items-center space-x-3 overflow-hidden">
@@ -104,7 +108,7 @@ export default function SkillModal({ isOpen, onClose, resumeId, initialSkills, o
           </div>
 
           {/* Form Area */}
-          <div className="w-2/3 p-8 overflow-y-auto bg-card">
+          <div className="w-2/3 p-8 overflow-y-auto bg-white/40">
             {selectedSkill ? (
               <div className="space-y-6">
                 <div>
@@ -129,7 +133,7 @@ export default function SkillModal({ isOpen, onClose, resumeId, initialSkills, o
                   />
                 </div>
                 
-                <div className="bg-cream rounded-md p-4 mt-6">
+                <div className="bg-cream/60 rounded-md p-4 mt-6 border border-border-light">
                   <h4 className="text-sm font-medium text-text-primary mb-2">Preview</h4>
                   <div className="flex flex-wrap gap-2 mt-2">
                     {selectedSkill.skills_list?.split(',').filter((s: string) => s.trim()).map((s: string, i: number) => (
@@ -149,7 +153,7 @@ export default function SkillModal({ isOpen, onClose, resumeId, initialSkills, o
         </div>
 
         {/* Footer */}
-        <div className="flex items-center justify-end p-4 border-t border-border-light bg-cream space-x-3">
+        <div className="relative flex items-center justify-end p-4 border-t border-border-light bg-white/60 backdrop-blur-sm space-x-3">
           <button 
             onClick={onClose}
             className="px-5 py-2 text-sm font-medium text-text-secondary hover:text-text-primary transition-colors"

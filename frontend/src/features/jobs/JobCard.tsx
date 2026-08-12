@@ -9,6 +9,14 @@ const PASTEL_PALETTE = [
   { bg: "bg-[#fdf4e9]", border: "border-[#f4dfc7]", name: "peach" },
   { bg: "bg-[#faeaea]", border: "border-[#eed1d1]", name: "rose" },
   { bg: "bg-[#fcf5de]", border: "border-[#ebdca8]", name: "yellow" },
+  { bg: "bg-[#e8f2ff]", border: "border-[#c4dcff]", name: "blue" },
+  { bg: "bg-[#fce7f3]", border: "border-[#fbcfe8]", name: "pink" },
+  { bg: "bg-[#fee2e2]", border: "border-[#fca5a5]", name: "red" },
+  { bg: "bg-[#ffedd5]", border: "border-[#fed7aa]", name: "orange" },
+  { bg: "bg-[#fae8ff]", border: "border-[#f5d0fe]", name: "fuchsia" },
+  { bg: "bg-[#f3e8ff]", border: "border-[#e9d5ff]", name: "purple" },
+  { bg: "bg-[#ccfbf1]", border: "border-[#99f6e4]", name: "teal" },
+  { bg: "bg-[#e0e7ff]", border: "border-[#c7d2fe]", name: "indigo" },
 ];
 
 function getPastelColors(companyName: string) {

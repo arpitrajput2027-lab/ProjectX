@@ -2,7 +2,11 @@
 
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
+<<<<<<< HEAD
 import { Users, Briefcase, Building, LogOut, FileText, Calendar } from "lucide-react";
+=======
+import { Users, Briefcase, Building, LogOut } from "lucide-react";
+>>>>>>> feature/design
 import { supabase } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
 
@@ -69,6 +73,7 @@ export default function RecruiterDashboardLayout({
             Active Jobs
           </Link>
           <Link
+<<<<<<< HEAD
             href="/recruiter-dashboard/bulk-resume"
             className="flex items-center px-3 py-2.5 rounded-md hover:bg-ink-2 transition-colors font-medium text-sm text-cream-2 group"
           >
@@ -83,6 +88,8 @@ export default function RecruiterDashboardLayout({
             Interview
           </Link>
           <Link
+=======
+>>>>>>> feature/design
             href="/recruiter-dashboard/talent"
             className="flex items-center px-3 py-2.5 rounded-md hover:bg-ink-2 transition-colors font-medium text-sm text-cream-2 group"
           >

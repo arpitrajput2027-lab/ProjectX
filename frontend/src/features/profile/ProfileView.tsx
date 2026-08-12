@@ -46,8 +46,13 @@ export function ProfileView({ studentId, readOnly }: { studentId?: string; readO
       const { data, error } = await supabase
         .from("student_profiles")
         .select("*")
+<<<<<<< HEAD
         .or(`user_id.eq.${targetUserId},id.eq.${targetUserId}`)
         .maybeSingle();
+=======
+        .eq("user_id", targetUserId)
+        .single();
+>>>>>>> feature/design
 
       if (error || !data) {
         // Redirect to onboarding if they don't have a profile
@@ -445,9 +450,16 @@ export function ProfileView({ studentId, readOnly }: { studentId?: string; readO
 
               {/* --- GITHUB SECTION --- */}
               <div className="space-y-4">
-                <div className="flex items-center space-x-2 pb-2 border-b border-rule-med">
-                  <GitBranch className="w-5 h-5 text-ink" />
-                  <h2 className="text-lg font-serif font-medium text-ink">GitHub Analytics</h2>
+                <div className="flex items-center justify-between pb-2 border-b border-rule-med">
+                  <div className="flex items-center space-x-2">
+                    <GitBranch className="w-5 h-5 text-ink" />
+                    <h2 className="text-lg font-serif font-medium text-ink">GitHub Analytics</h2>
+                  </div>
+                  {githubUsername && (
+                    <span className="font-mono text-xs text-green-700 bg-green-50 border border-green-200 px-2 py-0.5 rounded">
+                      @{githubUsername}
+                    </span>
+                  )}
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -456,7 +468,7 @@ export function ProfileView({ studentId, readOnly }: { studentId?: string; readO
                     <h3 className="font-mono text-xs uppercase tracking-widest text-muted mb-4 border-b border-rule pb-2">Overview</h3>
                     {githubUsername ? (
                       <img
-                        src={`https://github-readme-stats-eight-theta.vercel.app/api?username=${githubUsername}&show_icons=true&theme=tokyonight&bg_color=faf8f4&title_color=1a1814&text_color=3d3a35&icon_color=8b6a3e&border_color=e2dbd0`}
+                        src={`https://github-readme-stats-eight-theta.vercel.app/api?username=${githubUsername}&show_icons=true&theme=tokyonight&bg_color=faf8f4&title_color=1a1814&text_color=3d3a35&icon_color=239a3b&border_color=e2dbd0`}
                         alt="GitHub Stats"
                         className="w-full rounded-md"
                       />
@@ -484,7 +496,7 @@ export function ProfileView({ studentId, readOnly }: { studentId?: string; readO
                     <h3 className="font-mono text-xs uppercase tracking-widest text-muted mb-4 border-b border-rule pb-2">Commit Streak</h3>
                     {githubUsername ? (
                       <img
-                        src={`https://streak-stats.demolab.com?user=${githubUsername}&theme=tokyonight&background=faf8f4&border=e2dbd0&stroke=8b6a3e&ring=8b6a3e&fire=8b6a3e&currStreakLabel=3d3a35`}
+                        src={`https://streak-stats.demolab.com?user=${githubUsername}&theme=tokyonight&background=faf8f4&border=e2dbd0&stroke=239a3b&ring=239a3b&fire=239a3b&currStreakLabel=3d3a35`}
                         alt="GitHub Streak"
                         className="w-full rounded-md"
                       />
@@ -498,7 +510,7 @@ export function ProfileView({ studentId, readOnly }: { studentId?: string; readO
                     <h3 className="font-mono text-xs uppercase tracking-widest text-muted mb-4 border-b border-rule pb-2">Activity Graph</h3>
                     {githubUsername ? (
                       <img
-                        src={`https://github-readme-activity-graph.vercel.app/graph?username=${githubUsername}&theme=github-compact&bg_color=faf8f4&title_color=1a1814&color=3d3a35&line=8b6a3e&point=1a1814&hide_border=true`}
+                        src={`https://github-readme-activity-graph.vercel.app/graph?username=${githubUsername}&theme=github-compact&bg_color=faf8f4&title_color=1a1814&color=3d3a35&line=239a3b&point=1a1814&hide_border=true`}
                         alt="GitHub Activity Graph"
                         className="w-full rounded-md"
                       />
@@ -512,7 +524,7 @@ export function ProfileView({ studentId, readOnly }: { studentId?: string; readO
                     <h3 className="font-mono text-xs uppercase tracking-widest text-muted mb-4 border-b border-rule pb-2">Contributions Heatmap</h3>
                     {githubUsername ? (
                       <img
-                        src={`https://ghchart.rshah.org/8b6a3e/${githubUsername}`}
+                        src={`https://ghchart.rshah.org/239a3b/${githubUsername}`}
                         alt="GitHub Heatmap"
                         className="w-full rounded-md"
                       />
@@ -525,9 +537,16 @@ export function ProfileView({ studentId, readOnly }: { studentId?: string; readO
 
               {/* --- LEETCODE SECTION --- */}
               <div className="space-y-4">
-                <div className="flex items-center space-x-2 pb-2 border-b border-rule-med">
-                  <Code className="w-5 h-5 text-yellow-600" />
-                  <h2 className="text-lg font-serif font-medium text-ink">LeetCode Analytics</h2>
+                <div className="flex items-center justify-between pb-2 border-b border-rule-med">
+                  <div className="flex items-center space-x-2">
+                    <Code className="w-5 h-5 text-yellow-600" />
+                    <h2 className="text-lg font-serif font-medium text-ink">LeetCode Analytics</h2>
+                  </div>
+                  {leetcodeUsername && (
+                    <span className="font-mono text-xs text-green-700 bg-green-50 border border-green-200 px-2 py-0.5 rounded">
+                      @{leetcodeUsername}
+                    </span>
+                  )}
                 </div>
 
                 <div className="flex flex-col gap-6">
@@ -536,7 +555,7 @@ export function ProfileView({ studentId, readOnly }: { studentId?: string; readO
                     <h3 className="font-mono text-xs uppercase tracking-widest text-muted mb-4 border-b border-rule pb-2 w-full text-left">Stats Overview</h3>
                     {leetcodeUsername ? (
                       <img
-                        src={`https://leetcard.jacoblin.cool/${leetcodeUsername}?theme=light&font=baloo`}
+                        src={`https://leetcard.jacoblin.cool/${leetcodeUsername}?theme=forest&font=baloo`}
                         alt="LeetCode Stats"
                         className="w-full max-w-[400px] rounded-md shadow-sm"
                       />
@@ -551,7 +570,7 @@ export function ProfileView({ studentId, readOnly }: { studentId?: string; readO
                     {leetcodeUsername ? (
                       <div className="w-full bg-white rounded-md shadow-sm overflow-hidden" style={{ aspectRatio: "500 / 120", position: "relative" }}>
                         <img
-                          src={`https://leetcard.jacoblin.cool/${leetcodeUsername}?theme=light&font=baloo&ext=heatmap`}
+                          src={`https://leetcard.jacoblin.cool/${leetcodeUsername}?theme=forest&font=baloo&ext=heatmap`}
                           alt="LeetCode Heatmap"
                           style={{ width: "100%", height: "auto", position: "absolute", top: 0, left: 0, transform: "translateY(-62.5%)" }}
                         />

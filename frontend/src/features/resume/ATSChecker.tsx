@@ -58,9 +58,23 @@ const getScoreBg = (score: number) => {
 export function ATSChecker({ profileData, onNavigateToSection }: ATSCheckerProps) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [results, setResults] = useState<ATSResponse | null>(null);
+  const [results, setResults] = useState<ATSResponse | null>(() => {
+    if (typeof window !== "undefined") {
+      const saved = localStorage.getItem("projectx_ats_results");
+      if (saved) {
+        try { return JSON.parse(saved); } catch (e) { console.error(e); }
+      }
+    }
+    return null;
+  });
   const [expandedSections, setExpandedSections] = useState<Record<string, boolean>>({});
   const [progress, setProgress] = useState(0);
+
+  useEffect(() => {
+    if (results && typeof window !== "undefined") {
+      localStorage.setItem("projectx_ats_results", JSON.stringify(results));
+    }
+  }, [results]);
 
   const analyzeResume = async () => {
     setLoading(true);
