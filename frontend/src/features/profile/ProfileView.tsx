@@ -13,7 +13,7 @@ import SkillModal from "@/components/modals/SkillModal";
 import AchievementModal from "@/components/modals/AchievementModal";
 import CertificationModal from "@/components/modals/CertificationModal";
 
-export function ProfileView() {
+export function ProfileView({ studentId, readOnly }: { studentId?: string; readOnly?: boolean } = {}) {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [profile, setProfile] = useState<any>(null);
@@ -35,7 +35,10 @@ export function ProfileView() {
   useEffect(() => {
     async function loadProfile() {
       const { data: { session } } = await supabase.auth.getSession();
-      if (!session) {
+      let targetUserId = session?.user.id;
+      if (studentId) {
+        targetUserId = studentId;
+      } else if (!session) {
         router.push("/auth/login");
         return;
       }
@@ -43,18 +46,19 @@ export function ProfileView() {
       const { data, error } = await supabase
         .from("student_profiles")
         .select("*")
-        .eq("user_id", session.user.id)
+        .eq("user_id", targetUserId)
         .single();
 
       if (error || !data) {
         // Redirect to onboarding if they don't have a profile
-        router.push("/onboarding");
+        if (!readOnly) router.push("/onboarding");
+        setLoading(false);
         return;
       } else if (data) {
         setProfile(data);
         resetContact({
           full_name: data.full_name,
-          email: session.user.email,
+          email: session?.user?.email || "Contact for email",
           phone: data.phone,
           location: data.location,
           target_role: data.target_role,
@@ -133,27 +137,31 @@ export function ProfileView() {
                 <p className="text-xs text-ink-3 mt-1 truncate max-w-[200px]">{profile.target_role || "No role set"}</p>
               </div>
             </div>
-            <button className="text-xs font-medium text-ink-3 hover:text-ink flex items-center space-x-1 cursor-pointer transition-colors">
-              <span>Edit</span>
-              <ArrowRight className="w-3 h-3" />
-            </button>
+            {!readOnly && (
+              <button className="text-xs font-medium text-ink-3 hover:text-ink flex items-center space-x-1 cursor-pointer transition-colors">
+                <span>Edit</span>
+                <ArrowRight className="w-3 h-3" />
+              </button>
+            )}
           </div>
 
-          <div className="bg-white rounded-xl border border-rule-med p-6 flex items-center justify-between shadow-sm cursor-pointer hover:border-accent/50 transition-colors" onClick={() => router.push(`/resume`)}>
-            <div className="flex items-center space-x-4">
-              <div className="w-10 h-10 bg-accent-lt text-accent flex items-center justify-center rounded-lg">
-                <FileText className="w-5 h-5" />
+          {!readOnly && (
+            <div className="bg-white rounded-xl border border-rule-med p-6 flex items-center justify-between shadow-sm cursor-pointer hover:border-accent/50 transition-colors" onClick={() => router.push(`/resume`)}>
+              <div className="flex items-center space-x-4">
+                <div className="w-10 h-10 bg-accent-lt text-accent flex items-center justify-center rounded-lg">
+                  <FileText className="w-5 h-5" />
+                </div>
+                <div>
+                  <h3 className="font-semibold text-ink">Resume</h3>
+                  <p className="text-xs text-ink-3 mt-1">Wording, order and formatting</p>
+                </div>
               </div>
-              <div>
-                <h3 className="font-semibold text-ink">Resume</h3>
-                <p className="text-xs text-ink-3 mt-1">Wording, order and formatting</p>
-              </div>
+              <button className="text-xs font-medium text-ink-3 hover:text-ink flex items-center space-x-1 transition-colors cursor-pointer">
+                <span>Preview</span>
+                <ArrowRight className="w-3 h-3" />
+              </button>
             </div>
-            <button className="text-xs font-medium text-ink-3 hover:text-ink flex items-center space-x-1 transition-colors cursor-pointer">
-              <span>Preview</span>
-              <ArrowRight className="w-3 h-3" />
-            </button>
-          </div>
+          )}
         </div>
       </div>
 
@@ -171,13 +179,15 @@ export function ProfileView() {
                 <span className="w-8 h-8 rounded-full bg-purple-100 flex items-center justify-center text-purple-600 text-sm">🎓</span>
                 <span>Education</span>
               </h3>
-              <button
-                onClick={() => setIsEducationModalOpen(true)}
-                className="flex items-center space-x-2 px-3 py-1.5 rounded-md border border-rule-med hover:bg-cream transition-colors text-sm font-medium text-ink-2 cursor-pointer"
-              >
-                <Pencil className="w-4 h-4" />
-                <span>Edit</span>
-              </button>
+              {!readOnly && (
+                <button
+                  onClick={() => setIsEducationModalOpen(true)}
+                  className="flex items-center space-x-2 px-3 py-1.5 rounded-md border border-rule-med hover:bg-cream transition-colors text-sm font-medium text-ink-2 cursor-pointer"
+                >
+                  <Pencil className="w-4 h-4" />
+                  <span>Edit</span>
+                </button>
+              )}
             </div>
 
             <div className="space-y-6">
@@ -204,13 +214,15 @@ export function ProfileView() {
                 <span className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 text-sm">💼</span>
                 <span>Experience</span>
               </h3>
-              <button
-                onClick={() => setIsExperienceModalOpen(true)}
-                className="flex items-center space-x-2 px-3 py-1.5 rounded-md border border-rule-med hover:bg-cream transition-colors text-sm font-medium text-ink-2 cursor-pointer"
-              >
-                <Pencil className="w-4 h-4" />
-                <span>Edit</span>
-              </button>
+              {!readOnly && (
+                <button
+                  onClick={() => setIsExperienceModalOpen(true)}
+                  className="flex items-center space-x-2 px-3 py-1.5 rounded-md border border-rule-med hover:bg-cream transition-colors text-sm font-medium text-ink-2 cursor-pointer"
+                >
+                  <Pencil className="w-4 h-4" />
+                  <span>Edit</span>
+                </button>
+              )}
             </div>
 
             <div className="space-y-6">
@@ -238,13 +250,15 @@ export function ProfileView() {
                 <span className="w-8 h-8 rounded-full bg-orange-100 flex items-center justify-center text-orange-600 text-sm">🚀</span>
                 <span>Projects</span>
               </h3>
-              <button
-                onClick={() => setIsProjectModalOpen(true)}
-                className="flex items-center space-x-2 px-3 py-1.5 rounded-md border border-rule-med hover:bg-cream transition-colors text-sm font-medium text-ink-2 cursor-pointer"
-              >
-                <Pencil className="w-4 h-4" />
-                <span>Edit</span>
-              </button>
+              {!readOnly && (
+                <button
+                  onClick={() => setIsProjectModalOpen(true)}
+                  className="flex items-center space-x-2 px-3 py-1.5 rounded-md border border-rule-med hover:bg-cream transition-colors text-sm font-medium text-ink-2 cursor-pointer"
+                >
+                  <Pencil className="w-4 h-4" />
+                  <span>Edit</span>
+                </button>
+              )}
             </div>
 
             <div className="space-y-6">
@@ -269,13 +283,15 @@ export function ProfileView() {
                 <span className="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center text-green-600 text-sm">⚙️</span>
                 <span>Skills</span>
               </h3>
-              <button
-                onClick={() => setIsSkillModalOpen(true)}
-                className="flex items-center space-x-2 px-3 py-1.5 rounded-md border border-rule-med hover:bg-cream transition-colors text-sm font-medium text-ink-2 cursor-pointer"
-              >
-                <Pencil className="w-4 h-4" />
-                <span>Edit</span>
-              </button>
+              {!readOnly && (
+                <button
+                  onClick={() => setIsSkillModalOpen(true)}
+                  className="flex items-center space-x-2 px-3 py-1.5 rounded-md border border-rule-med hover:bg-cream transition-colors text-sm font-medium text-ink-2 cursor-pointer"
+                >
+                  <Pencil className="w-4 h-4" />
+                  <span>Edit</span>
+                </button>
+              )}
             </div>
 
             <div className="space-y-4">
@@ -302,13 +318,15 @@ export function ProfileView() {
                 <span className="w-8 h-8 rounded-full bg-yellow-100 flex items-center justify-center text-yellow-600 text-sm">🏆</span>
                 <span>Achievements</span>
               </h3>
-              <button
-                onClick={() => setIsAchievementModalOpen(true)}
-                className="flex items-center space-x-2 px-3 py-1.5 rounded-md border border-rule-med hover:bg-cream transition-colors text-sm font-medium text-ink-2 cursor-pointer"
-              >
-                <Pencil className="w-4 h-4" />
-                <span>Edit</span>
-              </button>
+              {!readOnly && (
+                <button
+                  onClick={() => setIsAchievementModalOpen(true)}
+                  className="flex items-center space-x-2 px-3 py-1.5 rounded-md border border-rule-med hover:bg-cream transition-colors text-sm font-medium text-ink-2 cursor-pointer"
+                >
+                  <Pencil className="w-4 h-4" />
+                  <span>Edit</span>
+                </button>
+              )}
             </div>
 
             <div className="space-y-6">
@@ -330,13 +348,15 @@ export function ProfileView() {
                 <span className="w-8 h-8 rounded-full bg-teal-100 flex items-center justify-center text-teal-600 text-sm">📜</span>
                 <span>Certifications</span>
               </h3>
-              <button
-                onClick={() => setIsCertificationModalOpen(true)}
-                className="flex items-center space-x-2 px-3 py-1.5 rounded-md border border-rule-med hover:bg-cream transition-colors text-sm font-medium text-ink-2 cursor-pointer"
-              >
-                <Pencil className="w-4 h-4" />
-                <span>Edit</span>
-              </button>
+              {!readOnly && (
+                <button
+                  onClick={() => setIsCertificationModalOpen(true)}
+                  className="flex items-center space-x-2 px-3 py-1.5 rounded-md border border-rule-med hover:bg-cream transition-colors text-sm font-medium text-ink-2 cursor-pointer"
+                >
+                  <Pencil className="w-4 h-4" />
+                  <span>Edit</span>
+                </button>
+              )}
             </div>
 
             <div className="space-y-6">
@@ -369,7 +389,7 @@ export function ProfileView() {
               <span>Contact Information</span>
               <button
                 onClick={handleSubmitContact(onSubmitContact)}
-                className="text-xs text-accent hover:text-accent-dk font-medium flex items-center space-x-1 m-2 p-2 rounded-md bg-black text-white cursor-pointer"
+                className={`text-xs text-accent hover:text-accent-dk font-medium flex items-center space-x-1 m-2 p-2 rounded-md bg-black text-white cursor-pointer ${readOnly ? 'hidden' : ''}`}
               >
                 <Save className="w-3 h-3" />
                 <span >Save</span>
@@ -378,7 +398,7 @@ export function ProfileView() {
             <form className="space-y-4">
               <div>
                 <label className="block text-xs text-ink-3 mb-1">Full Name</label>
-                <input {...registerContact("full_name")} className="w-full bg-cream border border-rule-med rounded-md px-3 py-1.5 text-sm focus:border-accent outline-none" />
+                <input {...registerContact("full_name")} disabled={readOnly} className="w-full bg-cream border border-rule-med rounded-md px-3 py-1.5 text-sm focus:border-accent outline-none disabled:opacity-70" />
               </div>
               <div>
                 <label className="block text-xs text-ink-3 mb-1">Email (Read Only)</label>
@@ -386,15 +406,15 @@ export function ProfileView() {
               </div>
               <div>
                 <label className="block text-xs text-ink-3 mb-1">Phone</label>
-                <input {...registerContact("phone")} className="w-full bg-cream border border-rule-med rounded-md px-3 py-1.5 text-sm focus:border-accent outline-none" />
+                <input {...registerContact("phone")} disabled={readOnly} className="w-full bg-cream border border-rule-med rounded-md px-3 py-1.5 text-sm focus:border-accent outline-none disabled:opacity-70" />
               </div>
               <div>
                 <label className="block text-xs text-ink-3 mb-1">Location</label>
-                <input {...registerContact("location")} className="w-full bg-cream border border-rule-med rounded-md px-3 py-1.5 text-sm focus:border-accent outline-none" />
+                <input {...registerContact("location")} disabled={readOnly} className="w-full bg-cream border border-rule-med rounded-md px-3 py-1.5 text-sm focus:border-accent outline-none disabled:opacity-70" />
               </div>
               <div>
                 <label className="block text-xs text-ink-3 mb-1">Target Role</label>
-                <input {...registerContact("target_role")} className="w-full bg-cream border border-rule-med rounded-md px-3 py-1.5 text-sm focus:border-accent outline-none" />
+                <input {...registerContact("target_role")} disabled={readOnly} className="w-full bg-cream border border-rule-med rounded-md px-3 py-1.5 text-sm focus:border-accent outline-none disabled:opacity-70" />
               </div>
             </form>
           </div>
@@ -425,9 +445,16 @@ export function ProfileView() {
 
               {/* --- GITHUB SECTION --- */}
               <div className="space-y-4">
-                <div className="flex items-center space-x-2 pb-2 border-b border-rule-med">
-                  <GitBranch className="w-5 h-5 text-ink" />
-                  <h2 className="text-lg font-serif font-medium text-ink">GitHub Analytics</h2>
+                <div className="flex items-center justify-between pb-2 border-b border-rule-med">
+                  <div className="flex items-center space-x-2">
+                    <GitBranch className="w-5 h-5 text-ink" />
+                    <h2 className="text-lg font-serif font-medium text-ink">GitHub Analytics</h2>
+                  </div>
+                  {githubUsername && (
+                    <span className="font-mono text-xs text-green-700 bg-green-50 border border-green-200 px-2 py-0.5 rounded">
+                      @{githubUsername}
+                    </span>
+                  )}
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -436,7 +463,7 @@ export function ProfileView() {
                     <h3 className="font-mono text-xs uppercase tracking-widest text-muted mb-4 border-b border-rule pb-2">Overview</h3>
                     {githubUsername ? (
                       <img
-                        src={`https://github-readme-stats-eight-theta.vercel.app/api?username=${githubUsername}&show_icons=true&theme=tokyonight&bg_color=faf8f4&title_color=1a1814&text_color=3d3a35&icon_color=8b6a3e&border_color=e2dbd0`}
+                        src={`https://github-readme-stats-eight-theta.vercel.app/api?username=${githubUsername}&show_icons=true&theme=tokyonight&bg_color=faf8f4&title_color=1a1814&text_color=3d3a35&icon_color=239a3b&border_color=e2dbd0`}
                         alt="GitHub Stats"
                         className="w-full rounded-md"
                       />
@@ -464,7 +491,7 @@ export function ProfileView() {
                     <h3 className="font-mono text-xs uppercase tracking-widest text-muted mb-4 border-b border-rule pb-2">Commit Streak</h3>
                     {githubUsername ? (
                       <img
-                        src={`https://streak-stats.demolab.com?user=${githubUsername}&theme=tokyonight&background=faf8f4&border=e2dbd0&stroke=8b6a3e&ring=8b6a3e&fire=8b6a3e&currStreakLabel=3d3a35`}
+                        src={`https://streak-stats.demolab.com?user=${githubUsername}&theme=tokyonight&background=faf8f4&border=e2dbd0&stroke=239a3b&ring=239a3b&fire=239a3b&currStreakLabel=3d3a35`}
                         alt="GitHub Streak"
                         className="w-full rounded-md"
                       />
@@ -478,7 +505,7 @@ export function ProfileView() {
                     <h3 className="font-mono text-xs uppercase tracking-widest text-muted mb-4 border-b border-rule pb-2">Activity Graph</h3>
                     {githubUsername ? (
                       <img
-                        src={`https://github-readme-activity-graph.vercel.app/graph?username=${githubUsername}&theme=github-compact&bg_color=faf8f4&title_color=1a1814&color=3d3a35&line=8b6a3e&point=1a1814&hide_border=true`}
+                        src={`https://github-readme-activity-graph.vercel.app/graph?username=${githubUsername}&theme=github-compact&bg_color=faf8f4&title_color=1a1814&color=3d3a35&line=239a3b&point=1a1814&hide_border=true`}
                         alt="GitHub Activity Graph"
                         className="w-full rounded-md"
                       />
@@ -492,7 +519,7 @@ export function ProfileView() {
                     <h3 className="font-mono text-xs uppercase tracking-widest text-muted mb-4 border-b border-rule pb-2">Contributions Heatmap</h3>
                     {githubUsername ? (
                       <img
-                        src={`https://ghchart.rshah.org/8b6a3e/${githubUsername}`}
+                        src={`https://ghchart.rshah.org/239a3b/${githubUsername}`}
                         alt="GitHub Heatmap"
                         className="w-full rounded-md"
                       />
@@ -505,9 +532,16 @@ export function ProfileView() {
 
               {/* --- LEETCODE SECTION --- */}
               <div className="space-y-4">
-                <div className="flex items-center space-x-2 pb-2 border-b border-rule-med">
-                  <Code className="w-5 h-5 text-yellow-600" />
-                  <h2 className="text-lg font-serif font-medium text-ink">LeetCode Analytics</h2>
+                <div className="flex items-center justify-between pb-2 border-b border-rule-med">
+                  <div className="flex items-center space-x-2">
+                    <Code className="w-5 h-5 text-yellow-600" />
+                    <h2 className="text-lg font-serif font-medium text-ink">LeetCode Analytics</h2>
+                  </div>
+                  {leetcodeUsername && (
+                    <span className="font-mono text-xs text-green-700 bg-green-50 border border-green-200 px-2 py-0.5 rounded">
+                      @{leetcodeUsername}
+                    </span>
+                  )}
                 </div>
 
                 <div className="flex flex-col gap-6">
@@ -516,7 +550,7 @@ export function ProfileView() {
                     <h3 className="font-mono text-xs uppercase tracking-widest text-muted mb-4 border-b border-rule pb-2 w-full text-left">Stats Overview</h3>
                     {leetcodeUsername ? (
                       <img
-                        src={`https://leetcard.jacoblin.cool/${leetcodeUsername}?theme=light&font=baloo`}
+                        src={`https://leetcard.jacoblin.cool/${leetcodeUsername}?theme=forest&font=baloo`}
                         alt="LeetCode Stats"
                         className="w-full max-w-[400px] rounded-md shadow-sm"
                       />
@@ -531,7 +565,7 @@ export function ProfileView() {
                     {leetcodeUsername ? (
                       <div className="w-full bg-white rounded-md shadow-sm overflow-hidden" style={{ aspectRatio: "500 / 120", position: "relative" }}>
                         <img
-                          src={`https://leetcard.jacoblin.cool/${leetcodeUsername}?theme=light&font=baloo&ext=heatmap`}
+                          src={`https://leetcard.jacoblin.cool/${leetcodeUsername}?theme=forest&font=baloo&ext=heatmap`}
                           alt="LeetCode Heatmap"
                           style={{ width: "100%", height: "auto", position: "absolute", top: 0, left: 0, transform: "translateY(-62.5%)" }}
                         />

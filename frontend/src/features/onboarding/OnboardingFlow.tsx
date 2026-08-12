@@ -140,6 +140,18 @@ export function OnboardingFlow() {
   };
   const prevStep = () => currentStep > 1 && setCurrentStep(currentStep - 1);
 
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Enter" && !saving && !resumeParsing) {
+        // Prevent default if active element is an input to avoid unexpected behavior, but trigger next step
+        e.preventDefault();
+        nextStep();
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [currentStep, saving, resumeParsing, fullName, phone, targetRole, workPreference, location, githubUsername, leetcodeUsername]);
+
   return (
     <div className="min-h-screen bg-cream text-ink font-body flex flex-col" suppressHydrationWarning>
       <header className="flex justify-between items-center px-10 py-5 border-b border-rule-lt bg-cream/95 backdrop-blur-sm sticky top-0 z-10">
@@ -185,7 +197,7 @@ export function OnboardingFlow() {
                       value={fullName}
                       onChange={(e) => setFullName(e.target.value)}
                       placeholder="e.g. Arpit Rajput" 
-                      className="w-full bg-[#f7f3ec] border border-rule-lt rounded-md p-3 text-sm focus:outline-none focus:border-accent focus:bg-white transition-colors" 
+                      className="w-full bg-slate-50 border border-rule-lt rounded-md p-3 text-sm focus:outline-none focus:border-accent focus:bg-white transition-colors" 
                     />
                   </div>
                   <div>
@@ -195,7 +207,7 @@ export function OnboardingFlow() {
                       value={phone}
                       onChange={(e) => setPhone(e.target.value)}
                       placeholder="+91 00000 00000" 
-                      className="w-full bg-[#f7f3ec] border border-rule-lt rounded-md p-3 text-sm focus:outline-none focus:border-accent focus:bg-white transition-colors" 
+                      className="w-full bg-slate-50 border border-rule-lt rounded-md p-3 text-sm focus:outline-none focus:border-accent focus:bg-white transition-colors" 
                     />
                   </div>
                 </div>
@@ -219,7 +231,7 @@ export function OnboardingFlow() {
                       value={targetRole}
                       onChange={(e) => setTargetRole(e.target.value)}
                       placeholder="e.g. Frontend Engineer, SDE-1, Data Scientist" 
-                      className="w-full bg-[#f7f3ec] border border-rule-lt rounded-md p-3 text-sm focus:outline-none focus:border-accent focus:bg-white transition-colors" 
+                      className="w-full bg-slate-50 border border-rule-lt rounded-md p-3 text-sm focus:outline-none focus:border-accent focus:bg-white transition-colors" 
                     />
                   </div>
                   
@@ -229,7 +241,7 @@ export function OnboardingFlow() {
                       <select 
                         value={workPreference} 
                         onChange={(e) => setWorkPreference(e.target.value)}
-                        className="w-full bg-[#f7f3ec] border border-rule-lt rounded-md p-3 text-sm focus:outline-none focus:border-accent focus:bg-white transition-colors appearance-none"
+                        className="w-full bg-slate-50 border border-rule-lt rounded-md p-3 text-sm focus:outline-none focus:border-accent focus:bg-white transition-colors appearance-none"
                       >
                         <option value="Remote">Remote</option>
                         <option value="Office">Office / On-site</option>
@@ -243,7 +255,7 @@ export function OnboardingFlow() {
                         value={location}
                         onChange={(e) => setLocation(e.target.value)}
                         placeholder="e.g. Bangalore, Remote, London" 
-                        className="w-full bg-[#f7f3ec] border border-rule-lt rounded-md p-3 text-sm focus:outline-none focus:border-accent focus:bg-white transition-colors" 
+                        className="w-full bg-slate-50 border border-rule-lt rounded-md p-3 text-sm focus:outline-none focus:border-accent focus:bg-white transition-colors" 
                       />
                     </div>
                   </div>
@@ -271,7 +283,7 @@ export function OnboardingFlow() {
                   <div className={`border-2 border-dashed rounded-xl p-12 flex flex-col items-center justify-center transition-all ${
                     resumeUploaded ? 'border-green-500 bg-green-50' : 
                     resumeParsing ? 'border-accent bg-accent/5 scale-[1.02]' : 
-                    'border-rule-med hover:border-accent bg-[#f7f3ec]'
+                    'border-rule-med hover:border-accent bg-slate-50'
                   }`}>
                     
                     {resumeParsing ? (
@@ -311,7 +323,7 @@ export function OnboardingFlow() {
                 
                 <div className="space-y-4">
                   {/* GitHub */}
-                  <div className={`border rounded-lg p-6 flex flex-col sm:flex-row gap-4 sm:items-center justify-between transition-colors ${githubConnected ? 'border-green-500 bg-green-50' : 'border-rule-lt bg-[#f7f3ec]'}`}>
+                  <div className={`border rounded-lg p-6 flex flex-col sm:flex-row gap-4 sm:items-center justify-between transition-colors ${githubConnected ? 'border-green-500 bg-green-50' : 'border-rule-lt bg-slate-50'}`}>
                     <div className="flex items-center gap-4">
                       <div className="w-10 h-10 bg-white rounded-full border border-rule-lt flex items-center justify-center">
                         <GitBranch className="w-5 h-5 text-ink" />
@@ -321,8 +333,12 @@ export function OnboardingFlow() {
                         <div className="font-mono text-[10px] text-muted mt-1 uppercase tracking-widest">Commits, Repos, Languages</div>
                       </div>
                     </div>
-                    <div className="flex gap-2">
-                      {!githubConnected && (
+                    <div className="flex items-center gap-3">
+                      {githubConnected ? (
+                        <span className="font-mono text-sm font-semibold text-green-800 bg-green-100 border border-green-300 px-3 py-1.5 rounded-md">
+                          @{githubUsername}
+                        </span>
+                      ) : (
                         <input 
                           type="text" 
                           value={githubUsername}
@@ -332,9 +348,8 @@ export function OnboardingFlow() {
                         />
                       )}
                       <button 
-                        onClick={() => { if(githubUsername) setGithubConnected(true); else alert("Enter username"); }}
-                        disabled={githubConnected}
-                        className="bg-ink text-cream px-4 py-2 rounded-md font-mono text-[10px] uppercase tracking-widest disabled:opacity-50 hover:bg-accent transition-colors whitespace-nowrap"
+                        onClick={() => { if(githubUsername) setGithubConnected(!githubConnected); else alert("Enter username"); }}
+                        className="bg-ink text-cream px-4 py-2 rounded-md font-mono text-[10px] uppercase tracking-widest hover:bg-accent transition-colors whitespace-nowrap"
                       >
                         {githubConnected ? 'Linked ✓' : 'Connect'}
                       </button>
@@ -342,7 +357,7 @@ export function OnboardingFlow() {
                   </div>
 
                   {/* LeetCode */}
-                  <div className={`border rounded-lg p-6 flex flex-col sm:flex-row gap-4 sm:items-center justify-between transition-colors ${leetcodeConnected ? 'border-green-500 bg-green-50' : 'border-rule-lt bg-[#f7f3ec]'}`}>
+                  <div className={`border rounded-lg p-6 flex flex-col sm:flex-row gap-4 sm:items-center justify-between transition-colors ${leetcodeConnected ? 'border-green-500 bg-green-50' : 'border-rule-lt bg-slate-50'}`}>
                     <div className="flex items-center gap-4">
                       <div className="w-10 h-10 bg-white rounded-full border border-rule-lt flex items-center justify-center">
                         <Code className="w-5 h-5 text-yellow-600" />
@@ -352,8 +367,12 @@ export function OnboardingFlow() {
                         <div className="font-mono text-[10px] text-muted mt-1 uppercase tracking-widest">Problem Solving, Consistency</div>
                       </div>
                     </div>
-                    <div className="flex gap-2">
-                      {!leetcodeConnected && (
+                    <div className="flex items-center gap-3">
+                      {leetcodeConnected ? (
+                        <span className="font-mono text-sm font-semibold text-green-800 bg-green-100 border border-green-300 px-3 py-1.5 rounded-md">
+                          @{leetcodeUsername}
+                        </span>
+                      ) : (
                         <input 
                           type="text" 
                           value={leetcodeUsername}
@@ -363,9 +382,8 @@ export function OnboardingFlow() {
                         />
                       )}
                       <button 
-                        onClick={() => { if(leetcodeUsername) setLeetcodeConnected(true); else alert("Enter username"); }}
-                        disabled={leetcodeConnected}
-                        className="bg-ink text-cream px-4 py-2 rounded-md font-mono text-[10px] uppercase tracking-widest disabled:opacity-50 hover:bg-accent transition-colors whitespace-nowrap"
+                        onClick={() => { if(leetcodeUsername) setLeetcodeConnected(!leetcodeConnected); else alert("Enter username"); }}
+                        className="bg-ink text-cream px-4 py-2 rounded-md font-mono text-[10px] uppercase tracking-widest hover:bg-accent transition-colors whitespace-nowrap"
                       >
                         {leetcodeConnected ? 'Linked ✓' : 'Connect'}
                       </button>
@@ -384,7 +402,7 @@ export function OnboardingFlow() {
                 <h1 className="font-serif text-4xl mb-4 text-ink">All set to go public.</h1>
                 <p className="text-sm text-ink-3 mb-10 leading-relaxed max-w-lg">Here is a quick summary of your generated profile. You can edit all details later.</p>
                 
-                <div className="bg-[#f7f3ec] border border-rule-lt rounded-xl p-8">
+                <div className="bg-slate-50 border border-rule-lt rounded-xl p-8">
                   <div className="grid grid-cols-2 gap-y-6 gap-x-4">
                     <div>
                       <div className="font-mono text-[9px] uppercase tracking-widest text-muted mb-1">Name</div>

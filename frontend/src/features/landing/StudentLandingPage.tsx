@@ -98,7 +98,7 @@ export function StudentLandingPage() {
 
           {/* Right Mockup (Hidden on small screens) */}
           <div className="hidden lg:flex flex-1 items-center justify-center border-l border-rule-lt pl-12 py-12 relative">
-            <div className="w-full max-w-md bg-[#f7f3ec] border border-cream-3 rounded-lg p-6 relative overflow-hidden shadow-sm">
+            <div className="w-full max-w-md bg-slate-50 border border-cream-3 rounded-lg p-6 relative overflow-hidden shadow-sm">
               <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-accent to-transparent"></div>
               
               <div className="flex justify-between items-center mb-6">
@@ -196,7 +196,7 @@ export function StudentLandingPage() {
         </section>
 
         {/* --- HOW IT WORKS (End-to-End) --- */}
-        <section id="how-it-works" className="py-24 bg-[#f7f3ec] border-y border-rule-lt">
+        <section id="how-it-works" className="py-24 bg-slate-50 border-y border-rule-lt">
           <div className="max-w-6xl mx-auto px-6 md:px-12">
             <div className="font-mono text-[10px] tracking-widest uppercase text-muted mb-8 pb-4 border-b border-rule-lt">— 01 / The Journey</div>
             
@@ -222,7 +222,7 @@ export function StudentLandingPage() {
                   { step: "05", title: "Mock Interview Coach", desc: "Practice before the real thing. Dynamic AI interviews based on your resume and target role, with detailed feedback." },
                 ].map((item, i) => (
                   <div key={i} className="relative mb-10 last:mb-0 flex gap-6 group cursor-default">
-                    <div className="w-[14px] h-[14px] bg-[#f7f3ec] border-[2px] border-accent rounded-full mt-1.5 flex-shrink-0 z-10 group-hover:scale-125 transition-transform"></div>
+                    <div className="w-[14px] h-[14px] bg-slate-50 border-[2px] border-accent rounded-full mt-1.5 flex-shrink-0 z-10 group-hover:scale-125 transition-transform"></div>
                     <div>
                       <div className="font-mono text-[10px] tracking-widest uppercase text-accent mb-1">{item.step}</div>
                       <h3 className="font-serif text-xl text-ink mb-2">{item.title}</h3>
