@@ -1,223 +1,292 @@
-# AI Career OS — ReadyIndex Platform.
+# 🚀 AI Career OS — ReadyIndex / ProjectX
 
-> **Built by:** Arpit Rajput Lodhi · Bhavneesh · [@arpitrajput2027-lab](https://github.com/arpitrajput2027-lab)
+**AI Career OS** is a full-stack, AI-powered career platform that bridges the gap between **Students** (job seekers) and **Recruiters** (hiring managers). It uses multiple LLMs (Groq LLaMA 3.3, Google Gemini, Sarvam 105B) to automate resume parsing, ATS scoring, job-resume matching, resume customization, and real-time job discovery.
 
-Full-stack AI-powered career intelligence platform. Students upload resumes, connect GitHub/LeetCode profiles, and get an honest "ReadyIndex" score. AI runs ATS checks, JD matching, and resume customization.
-
-**Stack:** Next.js 15 (App Router) + FastAPI + Supabase + Groq (LLaMA 3.3 70B) + Gemini 2.0 Flash fallback
-
-For setup instructions → see [SETUP.md](SETUP.md)
+The platform has two completely separate dashboards — one for Students and one for Recruiters — each with its own onboarding flow, feature set, and landing page.
 
 ---
 
-## ✅ WHAT IS BUILT (Current Status)
+## 🏗️ Architecture Overview
 
-### 🗄️ Database — COMPLETE (10 Tables)
-- `users` — extends Supabase `auth.users`, stores role (`student` / `recruiter` / `admin`)
-- `student_profiles` — full profile: name, phone, location, target role, work preference, GitHub/LeetCode usernames, readiness score, ATS score + all resume sections as JSONB (`education`, `experience`, `projects`, `skills`, `achievements`, `certifications`)
-- `company_profiles` — company metadata (name, industry, size, website, logo)
-- `recruiter_profiles` — linked to company, stores designation + contact
-- `resumes` — stores file path, raw text, structured JSON per student
-- `jobs` — full job listing (title, description, required skills, location, work mode, salary, deadline, status)
-- `applications` — tracks student → job with status pipeline: `saved → applied → assessment → interview_scheduled → interview_completed → selected → rejected`
-- `ats_checks` — ATS check history per user (scores, keywords, recommendations)
-- `jd_matches` — JD match history per user (match score, readiness score, matched/missing skills)
+```
+┌─────────────────────┐        ┌──────────────────────────────┐
+│     Next.js 16      │  API   │       FastAPI (Python)        │
+│  (React 19 + TS)    │◄──────►│   Routers: auth, students,   │
+│  Tailwind CSS 4     │  REST  │   resumes, recruiters, jobs,  │
+│  Supabase Auth      │        │   ats, interviews             │
+└────────┬────────────┘        └──────────────┬───────────────┘
+         │                                     │
+         │  Direct DB Access                   │  Service Role Key
+         ▼                                     ▼
+┌──────────────────────────────────────────────────────────────┐
+│                    Supabase (PostgreSQL)                      │
+│  Tables: users, student_profiles, recruiter_profiles,        │
+│  company_profiles, resumes, jobs, applications,              │
+│  ats_checks, jd_matches, saved_candidates, interviews        │
+│  + Storage Bucket: resumes (PDF files)                       │
+└──────────────────────────────────────────────────────────────┘
+```
 
----
-
-### 🐍 Backend (FastAPI) — PARTIAL
-
-| Router | Endpoint | Status | Notes |
-|---|---|---|---|
-| `/api/auth` | `routers/auth.py` | 🟡 Stub | Login/Signup routes exist, logic placeholder — auth handled by Supabase on frontend |
-| `/api/students` | `routers/students.py` | 🟡 Stub | `/onboarding` + `/me` exist, not wired to DB |
-| `/api/recruiters` | `routers/recruiters.py` | 🟡 Stub | Placeholder only |
-| `/api/jobs` | `routers/jobs.py` | 🟡 Stub | Placeholder only |
-| `/api/resumes/parse` | `routers/resumes.py` | ✅ LIVE | PDF upload → PyMuPDF text extract → LLM structured parse → returns JSON |
-| `/api/ats/check` | `routers/ats.py` | ✅ LIVE | Takes resume JSON → returns 8-dimension ATS score + feedback + saves to DB |
-| `/api/ats/match-jd` | `routers/ats.py` | ✅ LIVE | Resume + JD → match score, readiness score, skill gaps + saves to DB |
-| `/api/ats/customize` | `routers/ats.py` | ✅ LIVE | Resume + JD + match → AI-customized resume (no hallucination, rearrange/rephrase only) |
-
-**AI Services (fully built):**
-- `llm_service.py` — PDF text → structured JSON extraction (Groq primary, Gemini fallback)
-- `ats_service.py` — 3 functions: ATS check, JD match, resume customization (Groq primary, Gemini fallback)
-- `parsing.py` — PyMuPDF PDF byte extraction
-- `database.py` — Supabase client singleton
-
-**Dependencies:** `fastapi`, `uvicorn`, `supabase`, `pydantic`, `groq`, `google-generativeai`, `PyMuPDF`, `python-multipart`, `python-dotenv`
-
----
-
-### ⚛️ Frontend (Next.js 15) — PARTIAL
-
-#### Pages / Routes
-
-| Route | Status | Notes |
+### AI / LLM Integrations
+| Provider | Model | Used For |
 |---|---|---|
-| `/` | ✅ | Routes to correct landing based on role |
-| `/auth/login` | ✅ | Supabase auth via AuthModal |
-| `/auth/signup` | ✅ | Supabase auth + Google OAuth |
-| `/onboarding` | ✅ LIVE | 5-step wizard, fully wired to DB |
-| `/(dashboard)/profile` | ✅ LIVE | Full profile management + modals |
-| `/(dashboard)/resume` | ✅ LIVE | Resume editor + ATS + JD Matcher tabs |
-| `/student` | 🟡 Stub | Placeholder redirect only |
-| `/recruiter` | 🟡 Stub | Placeholder redirect only |
-
-#### Feature Components
-
-**`features/landing/`**
-- `LandingPage.tsx` — root router, detects role, renders correct landing
-- `StudentLandingPage.tsx` ✅ — full ReadyIndex landing: hero with mock score gauge, stats band, problem section, 5-step journey, 6-feature grid, CTA, footer. AuthModal integrated.
-- `RecruiterLandingPage.tsx` ✅ — recruiter-facing landing (separate branding/copy)
-
-**`features/onboarding/`**
-- `OnboardingFlow.tsx` ✅ — **5-step wizard** wired to Supabase:
-  - Step 1: Personal info (name, phone)
-  - Step 2: Preferences (target role, work preference, location)
-  - Step 3: Resume upload → calls `/api/resumes/parse` → AI parses PDF → stores structured data
-  - Step 4: Platform links (GitHub username, LeetCode username)
-  - Step 5: Review + submit → saves full profile to `student_profiles`
-
-**`features/profile/`**
-- `ProfileView.tsx` ✅ — **Full dashboard profile** (603 lines):
-  - Fetches profile from Supabase on load
-  - Contact info editable via react-hook-form
-  - GitHub stats card (via `github-readme-stats`)
-  - LeetCode stats card (via `leetcode-stats-api`)
-  - All resume sections: Education, Experience, Projects, Skills, Achievements, Certifications
-  - Each section: Add / Edit / Delete via dedicated modals
-  - Stats drawer (ATS score display)
-
-**`features/resume/`**
-- `ResumeEditor.tsx` ✅ — full structured resume builder with all 6 sections
-- `ATSChecker.tsx` ✅ — calls `/api/ats/check`, shows 8-dimension scores, missing keywords, strengths/weaknesses, improvement tips
-- `JDMatcher.tsx` ✅ — paste JD → calls `/api/ats/match-jd` → shows match %, skill gaps, keyword hits → calls `/api/ats/customize` for tailored resume output
-
-**`features/jobs/`** — ❌ **EMPTY** (folder exists, nothing built)
-
-#### Modal Components Built (7 total)
-- `AuthModal.tsx` ✅ — login/signup (Supabase email + Google OAuth)
-- `ProjectModal.tsx` ✅ — add/edit project entries
-- `EducationModal.tsx` ✅ — add/edit education entries
-- `ExperienceModal.tsx` ✅ — add/edit experience entries
-- `SkillModal.tsx` ✅ — add/edit skill categories
-- `AchievementModal.tsx` ✅ — add/edit achievements
-- `CertificationModal.tsx` ✅ — add/edit certifications
-
-#### Lib
-- `supabase.ts` — Supabase browser client (anon key)
-- `studentRouting.ts` — routing utility for student flow
+| **Groq** | LLaMA 3.3 70B Versatile | Resume parsing, ATS scoring, JD matching, Resume customization (Primary) |
+| **Google Gemini** | Gemini 2.0 Flash | Same as above (Fallback when Groq fails) |
+| **Sarvam AI** | Sarvam 105B | Live job search — extracting job details from web snippets, scoring jobs against resume |
+| **SerpApi** | Google Jobs Engine | Fetching real-time job listings from Google Jobs |
+| **DuckDuckGo** | Web Search (ddgs) | Scraping job listings from LinkedIn, Naukri, Indeed as a secondary source |
 
 ---
 
-## ❌ WHAT IS NOT BUILT YET
+## 👨‍🎓 Student Side — Features (Detailed)
 
-### Frontend
-- **Jobs / Job Board** — `features/jobs/` is completely empty
-- **Recruiter Dashboard** — no recruiter-side UI exists at all
-- **RAG Resume Chat** — shown on landing page, not implemented
-- **Mock Interview Coach** — shown on landing page, not implemented
-- **Application Tracking** — DB table exists, no UI
-- **ReadyIndex Score dashboard widget** — mentioned in copy, not a real computed widget
-- **LeetCode/GitHub real-time score computation** — currently static embed cards only
+### 1. Authentication (Login / Signup)
+- Email + Password signup/login via **Supabase Auth**.
+- **Google OAuth** login — one-click sign in with Google.
+- Role-based signup — user selects `student` role during signup (passed as `?role=student` query param).
+- After signup, user is redirected to the **Onboarding Flow**.
+
+### 2. Student Onboarding Flow
+- Multi-step onboarding wizard (`OnboardingFlow.tsx` — 22KB component).
+- Collects: Full Name, Phone, Location, Target Role, Work Preference, Portfolio URL, GitHub username, LeetCode username.
+- Creates the `student_profiles` record in Supabase with `onboarding_completed = true`.
+- Redirects to the Student Dashboard after completion.
+
+### 3. Student Dashboard (Sidebar Navigation)
+The student dashboard has 6 pages accessible from the sidebar:
+
+#### 📋 Profile (`/profile`)
+- Displays the complete student profile fetched from Supabase `student_profiles` table.
+- Shows: Personal info, Education, Experience, Projects, Skills, Achievements, Certifications.
+- All data is populated from the parsed resume (via LLM) and the onboarding form.
+- **ReadyIndex Score** — an overall readiness metric.
+- Profile is a large 31KB component (`ProfileView.tsx`) with detailed card-based sections.
+
+#### 📝 Resume Builder (`/resume`)
+- **PDF Upload** — Upload a resume PDF, backend extracts text using **PyMuPDF** (`fitz`).
+- **LLM Parsing** — Extracted raw text is sent to Groq (LLaMA 3.3) which returns structured JSON with: education, experience, projects, skills, achievements, certifications.
+- **In-Browser Editor** — Rich resume editor (`ResumeEditor.tsx` — 22KB) to edit each section visually.
+- **PDF Export** — Export the edited resume as a downloadable PDF using `html2pdf.js`.
+
+#### 🛡️ ATS & JD Tools (`/resume?tab=ats`)
+Two powerful AI tools accessible from the resume page:
+
+**a) ATS Score Checker (`ATSChecker.tsx` — 19KB)**
+- Sends the structured resume JSON to `/api/ats/check`.
+- Backend uses Groq (with Gemini fallback) to evaluate the resume across **8 dimensions**:
+  1. Formatting (0-100)
+  2. Content Quality (0-100)
+  3. Skills Optimization (0-100)
+  4. Keyword Density (0-100)
+  5. Section Completeness (0-100)
+  6. Readability (0-100)
+  7. Structure (0-100)
+  8. Overall ATS Compatibility (0-100)
+- Returns: `overall_score`, `dimension_scores`, `missing_keywords`, `section_recommendations`, `improvement_tips`, `strengths`, `weaknesses`.
+- Results are saved to the `ats_checks` table in Supabase.
+
+**b) JD Matcher + Resume Customizer (`JDMatcher.tsx` — 26KB)**
+- **Step 1 — Match:** Paste any Job Description → sends it with resume data to `/api/ats/match-jd` → returns `overall_match_score`, `readiness_score`, `matched_skills`, `missing_skills`, `keyword_matches`, `experience_alignment`, `strengths`, `gaps`, `recommendations`.
+- **Step 2 — Customize:** One click sends the resume, JD, and match analysis to `/api/ats/customize` → returns a rewritten resume tailored for that specific JD, with `changes_made` log and `warnings` about what couldn't be added.
+- **Strict Truthfulness** — The AI is instructed to NEVER fabricate skills, only rearrange and rephrase existing ones.
+- Match results are saved to the `jd_matches` table.
+
+#### 🎯 Jobs on ReadyIndex (`/readyindex-jobs`)
+- Browse jobs posted by Recruiters on the platform itself (from `jobs` table).
+- Apply directly to these jobs — creates an `applications` record.
+
+#### 💼 Browse Jobs — Live Search (`/jobs`)
+- **AI-Powered Job Search** with multiple components:
+  - `JobBoardView.tsx` (16KB) — Main job board with filters.
+  - `SearchJobsModal.tsx` (16KB) — Upload resume PDF → AI parses it → suggests target roles, location, work mode → runs live search.
+  - `FilterBar.tsx` — Filter by keyword, location, work mode (remote/hybrid/onsite), minimum match score.
+  - `JobCard.tsx` — Card showing job title, company, location, work mode badge, match score meter, tags, source platform (LinkedIn/Naukri/Indeed/Web).
+  - `ApplyModal.tsx` — Apply to a job (manual or auto).
+- **Live Search Pipeline** (backend):
+  1. SerpApi fetches real jobs from Google Jobs.
+  2. DuckDuckGo scrapes `site:linkedin.com/jobs`, `site:naukri.com`, `site:indeed.com`.
+  3. Sarvam 105B extracts structured job data from raw web snippets.
+  4. Jobs are deduplicated by title+company and URL.
+  5. If resume text is provided, each job is scored (0-100) against the resume using Sarvam AI.
+  6. Jobs are stored in an in-memory `JobStore` with upsert, save, apply operations.
+- **Match Labels**: Strong match (85+), Good match (70+), Fair match (50+), Long shot (<50).
+- Seed jobs loaded from `seed_jobs.csv` for demo purposes.
+
+#### ✅ My Applications (`/applications`)
+- Track all jobs the student has applied to.
+- Shows application status pipeline: `saved → applied → assessment → interview_scheduled → interview_completed → selected/rejected`.
+- `MyApplicationsView.tsx` (15KB) — full application tracking dashboard.
+
+---
+
+## 👔 Recruiter Side — Features (Detailed)
+
+### 1. Recruiter Authentication
+- Same auth system (email+password or Google OAuth).
+- Signup with `?role=recruiter` query param.
+- After signup → redirected to **Recruiter Onboarding**.
+
+### 2. Recruiter Onboarding Flow
+- `RecruiterOnboardingFlow.tsx` (11KB) — Multi-step form.
+- Collects: Full Name, Designation, Phone, Company Name, Company Description, Industry, Website, Company Size, Location.
+- Creates both a `company_profiles` record and a `recruiter_profiles` record linked to it.
+- Redirects to Recruiter Dashboard after completion.
+
+### 3. Recruiter Dashboard (Sidebar Navigation)
+The recruiter dashboard has 5 pages:
+
+#### 💼 Active Jobs (`/recruiter-dashboard`)
+- `RecruiterDashboardView.tsx` (23KB) — The main recruiter hub.
+- **Create New Jobs** — Post job openings with title, target role, description, required skills, location, work mode, salary, deadline.
+- **View All Active Jobs** — See all jobs posted by this recruiter.
+- **View Candidates Per Job** — Click on a job → see all applications with candidate name, skills, match score.
+- **Rank Candidates** — One-click button to auto-rank all candidates for a job (currently assigns random scores as MVP mock logic, designed to be replaced with real AI scoring).
+- **Application Status Management** — Update candidate status through the pipeline.
+
+#### 📄 Bulk Resume Upload (`/recruiter-dashboard/bulk-resume`)
+- `BulkResumeView.tsx` (21KB) — A powerful bulk processing tool.
+- **Upload Multiple PDFs** — Select a job → upload many resume PDFs at once.
+- **Background Processing** — Each PDF is processed in a FastAPI `BackgroundTask`:
+  1. Creates a passive `student_profiles` record (name from filename).
+  2. Uploads PDF to Supabase Storage (`resumes` bucket).
+  3. Creates a `resumes` record.
+  4. Creates an `applications` record linking the candidate to the job.
+  5. Extracts text using PyMuPDF → parses using LLM → updates `resumes.structured_json` and `student_profiles` with parsed skills, education, etc.
+- All processing happens in the background — the recruiter gets an instant response.
+
+#### 📅 Interview Scheduling (`/recruiter-dashboard/interviews`)
+- `InterviewsView.tsx` (9KB) — Schedule and manage interviews.
+- **Schedule Interview** — Select an application → set date/time, duration, interviewer name, meeting link.
+- **View All Interviews** — See all scheduled interviews with candidate name, job title, status.
+- **Submit Feedback** — After interview, provide rating (1-5), feedback text, and recommendation (`STRONG_HIRE`, `HIRE`, `NO_HIRE`).
+- **Auto Status Update** — Submitting feedback automatically updates the application status to `selected` (for HIRE/STRONG_HIRE) or `rejected` (for NO_HIRE).
+
+#### 👥 Talent Pool (`/recruiter-dashboard/talent`)
+- `TalentPoolView.tsx` (14KB) — Browse all student profiles on the platform.
+- View candidate skills, experience, and education.
+- **Save Candidates** — Bookmark interesting candidates (saved to `saved_candidates` table).
+
+#### 🏢 Company Profile (`/recruiter-dashboard/company`)
+- `CompanyProfileView.tsx` (12KB) — View and manage the company profile.
+- Displays: Company Name, Description, Industry, Website, Size, Location, Logo.
+
+---
+
+## 🗄️ Database Schema (Supabase / PostgreSQL)
+
+| Table | Purpose |
+|---|---|
+| `users` | Extends Supabase `auth.users` — stores email and role (student/recruiter/admin) |
+| `student_profiles` | Full student data — name, phone, location, target role, skills, education, experience, projects, achievements, certifications, readiness_score, ats_score |
+| `company_profiles` | Company info — name, description, industry, website, size, location, logo |
+| `recruiter_profiles` | Recruiter info — linked to user and company |
+| `resumes` | Uploaded resumes — file_path, raw_text, structured_json, active_version flag |
+| `jobs` | Job postings by recruiters — title, description, required_skills, location, work_mode, salary, deadline, status |
+| `applications` | Links students to jobs — status pipeline, match_score |
+| `ats_checks` | ATS score history — dimension scores, missing keywords, strengths, weaknesses |
+| `jd_matches` | JD match history — match scores, matched/missing skills, recommendations |
+| `saved_candidates` | Recruiter bookmarks of students |
+| `interviews` | Interview records — scheduled_at, duration, interviewer, rating, feedback, recommendation |
+
+---
+
+## 🛠️ Technology Stack
 
 ### Backend
-- **Auth router** — stub only, no JWT / session validation middleware
-- **Students router** — `/me` not wired to DB
-- **Jobs router** — no CRUD implemented
-- **Recruiters router** — no CRUD implemented
-- **Application matching pipeline** — DB schema exists, no backend logic
-- **RAG pipeline** — not started
-- **ReadyIndex composite score** — not calculated anywhere in backend
+| Category | Technology |
+|---|---|
+| Framework | FastAPI (Python) |
+| Server | Uvicorn |
+| Database | Supabase (PostgreSQL) via `supabase-py` |
+| ORM (Optional) | SQLAlchemy + psycopg2-binary |
+| AI - Primary | Groq SDK (LLaMA 3.3 70B) |
+| AI - Fallback | Google Generative AI SDK (Gemini 2.0 Flash) |
+| AI - Job Search | Sarvam AI API (105B model) |
+| Job Search | SerpApi (Google Jobs), ddgs (DuckDuckGo) |
+| PDF Parsing | PyMuPDF (fitz) |
+| Data Validation | Pydantic |
+| File Uploads | python-multipart |
+| HTTP Client | requests |
+
+### Frontend
+| Category | Technology |
+|---|---|
+| Framework | Next.js 16 (App Router) |
+| UI Library | React 19 |
+| Language | TypeScript |
+| Styling | Tailwind CSS 4 |
+| Auth & DB Client | Supabase JS SDK |
+| HTTP Client | Axios |
+| Forms | React Hook Form |
+| PDF Export | html2pdf.js |
+| Icons | Lucide React |
 
 ---
 
-## 📁 Actual Project Structure
+## 📂 Project Structure
 
-```text
+```
 PROJECT/
-├── README.md
-├── SETUP.md
+├── backend/
+│   ├── main.py                    # FastAPI app entry point, CORS, router registration
+│   ├── database.py                # Supabase client initialization
+│   ├── parsing.py                 # PyMuPDF PDF text extraction
+│   ├── llm_service.py             # Resume parsing via Groq/Gemini LLMs
+│   ├── ats_service.py             # ATS scoring, JD matching, resume customization
+│   ├── jobs_search_pipeline.py    # Live job search (SerpApi + DuckDuckGo + Sarvam)
+│   ├── jobs_store.py              # In-memory job store with filtering and scoring
+│   ├── jobs_models.py             # Pydantic models for Job, RefreshResponse
+│   ├── seed_jobs.csv              # Demo seed job data
+│   ├── requirements.txt           # Python dependencies
+│   ├── routers/
+│   │   ├── auth.py                # Login/Signup endpoints (placeholder)
+│   │   ├── students.py            # Student profile endpoints
+│   │   ├── resumes.py             # Resume upload & parse endpoints
+│   │   ├── recruiters.py          # Bulk resume upload, candidate ranking, job CRUD
+│   │   ├── jobs.py                # Job listing, search, save, apply, refresh
+│   │   ├── ats.py                 # ATS check, JD match, resume customize
+│   │   └── interviews.py          # Interview scheduling & feedback
+│   └── .env.example               # Environment variable template
+│
+├── frontend/
+│   ├── src/
+│   │   ├── app/                   # Next.js App Router pages
+│   │   │   ├── page.tsx           # Landing page (role selection)
+│   │   │   ├── student/           # Student landing page
+│   │   │   ├── recruiter/         # Recruiter landing page
+│   │   │   ├── auth/login/        # Login page (email + Google OAuth)
+│   │   │   ├── auth/signup/       # Signup page (role-based)
+│   │   │   ├── onboarding/        # Student onboarding wizard
+│   │   │   ├── recruiter-onboarding/  # Recruiter onboarding wizard
+│   │   │   ├── (dashboard)/       # Student dashboard layout + pages
+│   │   │   │   ├── profile/       # Student profile view
+│   │   │   │   ├── resume/        # Resume builder + ATS/JD tools
+│   │   │   │   ├── readyindex-jobs/   # Platform jobs listing
+│   │   │   │   ├── jobs/          # Live AI job search board
+│   │   │   │   └── applications/  # Application tracker
+│   │   │   └── (recruiter-dashboard)/  # Recruiter dashboard layout + pages
+│   │   │       └── recruiter-dashboard/
+│   │   │           ├── page.tsx       # Active jobs + candidates
+│   │   │           ├── bulk-resume/   # Bulk resume upload
+│   │   │           ├── interviews/    # Interview scheduling
+│   │   │           ├── talent/        # Talent pool browser
+│   │   │           └── company/       # Company profile
+│   │   ├── features/              # Feature-level components
+│   │   │   ├── landing/           # Landing pages (Main, Student, Recruiter)
+│   │   │   ├── onboarding/        # Student onboarding flow
+│   │   │   ├── profile/           # ProfileView component
+│   │   │   ├── resume/            # ResumeEditor, ATSChecker, JDMatcher
+│   │   │   ├── jobs/              # JobBoard, SearchModal, FilterBar, JobCard, etc.
+│   │   │   └── recruiter/         # All recruiter feature components
+│   │   ├── components/            # Shared UI components (modals)
+│   │   └── lib/                   # Supabase client, routing helpers
+│   ├── package.json
+│   └── .env.example
+│
 ├── supabase/
-│   └── schema.sql               ← 10 tables + ATS/JD history tables
+│   └── schema.sql                 # Full database schema (all tables + migrations)
 │
-├── backend/                     ← FastAPI
-│   ├── main.py                  ← 6 routers registered
-│   ├── database.py              ← Supabase client
-│   ├── llm_service.py           ← PDF → structured JSON (Groq + Gemini fallback)
-│   ├── ats_service.py           ← ATS check + JD match + customize (Groq + Gemini)
-│   ├── parsing.py               ← PyMuPDF text extract
-│   ├── requirements.txt
-│   └── routers/
-│       ├── resumes.py           ← /parse ✅ LIVE
-│       ├── ats.py               ← /check, /match-jd, /customize ✅ LIVE
-│       ├── auth.py              ← 🟡 stub
-│       ├── students.py          ← 🟡 stub
-│       ├── recruiters.py        ← 🟡 stub
-│       └── jobs.py              ← 🟡 stub
-│
-└── frontend/                    ← Next.js 15 App Router
-    └── src/
-        ├── lib/
-        │   ├── supabase.ts
-        │   └── studentRouting.ts
-        ├── components/
-        │   └── modals/          ← 7 modals ✅
-        ├── features/
-        │   ├── landing/         ← StudentLandingPage ✅, RecruiterLandingPage ✅
-        │   ├── onboarding/      ← OnboardingFlow (5 steps, fully wired) ✅
-        │   ├── profile/         ← ProfileView (full profile + CRUD modals) ✅
-        │   ├── resume/          ← ResumeEditor, ATSChecker, JDMatcher ✅
-        │   └── jobs/            ← ❌ EMPTY
-        └── app/
-            ├── page.tsx
-            ├── layout.tsx
-            ├── globals.css
-            ├── auth/login/ + auth/signup/   ← ✅
-            ├── onboarding/                  ← ✅
-            ├── (dashboard)/
-            │   ├── layout.tsx
-            │   ├── profile/                 ← ✅
-            │   └── resume/                  ← ✅
-            ├── student/                     ← 🟡 stub
-            └── recruiter/                   ← 🟡 stub
-```
-
----
-
-## 🚀 Running the Application
-
-### Backend
-```bash
-cd backend
-python -m venv venv
-venv\Scripts\activate
-pip install -r requirements.txt
-uvicorn main:app --reload
-# → http://localhost:8000  |  API docs at /docs
-```
-
-### Frontend
-```bash
-cd frontend
-npm install
-npm run dev
-# → http://localhost:3000
-```
-
-### Environment Variables
-
-**`frontend/.env.local`**
-```env
-NEXT_PUBLIC_SUPABASE_URL=your_project_url
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your_anon_key
-NEXT_PUBLIC_API_URL=http://localhost:8000
-```
-
-**`backend/.env`**
-```env
-SUPABASE_URL=your_project_url
-SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
-GROQ_API_KEY=your_groq_key
-GEMINI_API_KEY=your_gemini_key
+├── architecture/                  # Architecture screenshots/diagrams
+├── start_servers.bat              # Windows batch script to start both servers
+└── .gitignore
 ```

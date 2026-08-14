@@ -1,217 +1,236 @@
-# Setup Guide
+# ⚙️ Setup Guide — AI Career OS
 
-Yeh guide aapko clone karne ke baad project ko local machine par run karne tak le jayegi.
-
-## 1) Prerequisites
-
-Install kar lo:
-- Git
-- Node.js 20+ and npm
-- Python 3.10+ (recommended)
-- A Supabase account
+Complete step-by-step setup from cloning to running the application.
 
 ---
 
-## 2) Clone the repository
-
+## Prerequisites
+- **Node.js** (v18+) — [Download](https://nodejs.org/)
+- **Python** (v3.10+) — [Download](https://python.org/)
+- **Git** — [Download](https://git-scm.com/)
 
 ---
 
-## 3) Backend setup (FastAPI)
+## Step 1 — Clone the Repository
+```bash
+git clone https://github.com/<your-username>/ProjectX.git
+cd ProjectX
+```
+
+---
+
+## Step 2 — Get API Keys
+
+You need **6 credentials** from 4 platforms. Here's exactly where and how to get each one:
+
+### 🔵 Supabase (Database + Auth + Storage)
+You need: `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY` (backend), `SUPABASE_ANON_KEY` (frontend).
+
+1. Go to [supabase.com](https://supabase.com) → Click **"Start your project"** → Sign in with GitHub.
+2. Click **"New Project"** → Enter project name, password, region → Click **"Create new project"**.
+3. Wait for the project to provision (~2 min).
+4. Go to **Settings → API** (left sidebar).
+5. Copy:
+   - **Project URL** → This is your `SUPABASE_URL` (e.g. `https://abcxyz.supabase.co`)
+   - **anon (public) key** → This is your `NEXT_PUBLIC_SUPABASE_ANON_KEY` (frontend)
+   - **service_role (secret) key** → This is your `SUPABASE_SERVICE_ROLE_KEY` (backend) — ⚠️ Never expose this in frontend!
+
+### 🔵 Setup Google OAuth (for "Login with Google")
+1. In Supabase Dashboard → Go to **Authentication → Providers** (left sidebar).
+2. Find **Google** in the list → Toggle it **ON**.
+3. You'll see it needs a **Client ID** and **Client Secret** from Google Cloud.
+4. Go to [Google Cloud Console](https://console.cloud.google.com/) → Create a new project (or use existing).
+5. Go to **APIs & Services → Credentials** → Click **"Create Credentials" → OAuth Client ID**.
+6. Application type: **Web application**.
+7. Under **Authorized redirect URIs**, add:
+   ```
+   https://<your-supabase-project-ref>.supabase.co/auth/v1/callback
+   ```
+   (You can find this exact URL in Supabase → Authentication → Providers → Google → **Callback URL**).
+8. Click **Create** → Copy the **Client ID** and **Client Secret**.
+9. Go back to Supabase → Authentication → Providers → Google → Paste Client ID and Client Secret → **Save**.
+
+### 🔵 Setup Database Tables
+1. In Supabase Dashboard → Go to **SQL Editor** (left sidebar).
+2. Open the file `supabase/schema.sql` from this project.
+3. Copy the entire SQL content → Paste it into the SQL Editor → Click **"Run"**.
+4. This creates all 11 tables: `users`, `student_profiles`, `recruiter_profiles`, `company_profiles`, `resumes`, `jobs`, `applications`, `ats_checks`, `jd_matches`, `saved_candidates`, `interviews`.
+
+### 🔵 Setup Supabase Storage
+1. Go to **Storage** (left sidebar) → Click **"New Bucket"**.
+2. Name: `resumes` → Set as **Public** → Create.
+3. This bucket stores uploaded resume PDF files.
+
+### 🟢 Groq API Key (Primary LLM)
+1. Go to [console.groq.com](https://console.groq.com/) → Sign up / Log in.
+2. Go to **API Keys** (left sidebar) → Click **"Create API Key"**.
+3. Copy the key → This is your `GROQ_API_KEY`.
+4. Free tier gives 30 RPM (requests per minute) on LLaMA 3.3 70B.
+
+### 🟡 Gemini API Key (Fallback LLM)
+1. Go to [Google AI Studio](https://aistudio.google.com/apikey) → Sign in with Google.
+2. Click **"Create API Key"** → Select a Google Cloud project (or create one).
+3. Copy the key → This is your `GEMINI_API_KEY`.
+4. Free tier gives 60 RPM on Gemini 2.0 Flash.
+
+### 🟠 Sarvam API Key (Job Search AI)
+1. Go to [sarvam.ai](https://www.sarvam.ai/) → Sign up / Log in.
+2. Go to Dashboard → **API Keys** → Create a new key.
+3. Copy the key → This is your `SARVAM_API_KEY`.
+4. This is used for the live job search pipeline to extract job data from web snippets.
+
+### 🔴 SerpApi Key (Google Jobs Search)
+1. Go to [serpapi.com](https://serpapi.com/) → Sign up / Log in.
+2. Go to **Dashboard** → Your API Key is displayed on the main page.
+3. Copy the key → This is your `SERPAPI_API_KEY`.
+4. Free tier gives 100 searches/month.
+
+---
+
+## Step 3 — Backend Setup
 
 ```bash
 cd backend
+```
+
+### Create virtual environment
+```bash
 python -m venv venv
 ```
 
 ### Activate virtual environment
+```bash
+# Windows
+venv\Scripts\activate
 
-Windows PowerShell:
-```powershell
-.\venv\Scripts\activate
+# Mac/Linux
+source venv/bin/activate
 ```
 
-```
-
-Then install dependencies:
+### Install dependencies
 ```bash
 pip install -r requirements.txt
 ```
 
-### Create backend environment file
-
-Copy the example file:
+### Configure environment variables
 ```bash
+# Windows
 copy .env.example .env
-```
 
-Or if you are using Git Bash / Linux / macOS:
-```bash
+# Mac/Linux
 cp .env.example .env
 ```
 
-Open [backend/.env](backend/.env) and fill the values.
-
-Example values:
+### Edit `backend/.env` — Paste all your keys:
 ```env
-SUPABASE_URL=https://your-project.supabase.co
-SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
-# Optional for AI features
-GROQ_API_KEY=your-groq-key
-GEMINI_API_KEY=your-gemini-key
+SUPABASE_URL=https://your-project-ref.supabase.co
+SUPABASE_SERVICE_ROLE_KEY=eyJhbGci...your-service-role-key...
+
+GROQ_API_KEY=gsk_your_groq_key_here
+GEMINI_API_KEY=your_gemini_key_here
+
+SARVAM_API_KEY=sk_your_sarvam_key_here
+SARVAM_BASE_URL=https://api.sarvam.ai/v1/chat/completions
+SARVAM_MODEL=sarvam-105b
+SERPAPI_API_KEY=your_serpapi_key_here
 ```
-
-### Run backend
-
-```bash
-uvicorn main:app --reload --host 0.0.0.0 --port 8000
-```
-
-Backend will be available at:
-- http://localhost:8000
-- API docs: http://localhost:8000/docs
 
 ---
 
-## 4) Frontend setup (Next.js)
-
-Open a new terminal:
+## Step 4 — Frontend Setup
 
 ```bash
-cd frontend
+cd ../frontend
+```
+
+### Install dependencies
+```bash
 npm install
 ```
 
-### Create frontend environment file
-
+### Configure environment variables
 ```bash
+# Windows
 copy .env.example .env.local
-```
 
-Or:
-```bash
+# Mac/Linux
 cp .env.example .env.local
 ```
 
-Open [frontend/.env.local](frontend/.env.local) and fill the values.
-
-Example values:
+### Edit `frontend/.env.local` — Paste your Supabase keys:
 ```env
-NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
+NEXT_PUBLIC_SUPABASE_URL=https://your-project-ref.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGci...your-anon-key...
 NEXT_PUBLIC_API_URL=http://localhost:8000
 ```
 
-### Run frontend
+> ⚠️ The frontend uses the **anon key** (public). The backend uses the **service_role key** (secret). Don't mix them up!
 
+---
+
+## Step 5 — Run the Application
+
+### Option A: Use the batch script (Windows only)
 ```bash
+# From the root project directory
+start_servers.bat
+```
+This opens two terminal windows — one for frontend, one for backend.
+
+### Option B: Run manually (any OS)
+
+**Terminal 1 — Backend:**
+```bash
+cd backend
+venv\Scripts\activate          # Windows
+# source venv/bin/activate     # Mac/Linux
+uvicorn main:app --port 8000 --reload
+```
+
+**Terminal 2 — Frontend:**
+```bash
+cd frontend
 npm run dev
 ```
 
-Frontend will be available at:
-- http://localhost:3000
+---
+
+## Step 6 — Access the Application
+
+| Service | URL |
+|---|---|
+| **Frontend** | [http://localhost:3000](http://localhost:3000) |
+| **Backend API** | [http://localhost:8000](http://localhost:8000) |
+| **API Docs (Swagger)** | [http://localhost:8000/docs](http://localhost:8000/docs) |
 
 ---
 
-## 5) Supabase setup
+## 🔗 Quick API Reference
 
-### A. Create a Supabase project
-
-1. Go to https://supabase.com
-2. Create a new project
-3. Wait for the database to finish provisioning
-
-### B. Apply the database schema
-
-1. Open the Supabase SQL Editor
-2. Open the file [supabase/schema.sql](supabase/schema.sql)
-3. Copy its contents and run it in the SQL Editor
-
-### C. Get your API keys
-
-Go to Supabase Dashboard -> Project Settings -> API
-
-Copy:
-- Project URL
-- anon public key
-- service role key
-
-### D. Enable Google OAuth
-
-1. Open Supabase Dashboard -> Authentication -> Providers
-2. Enable Google
-3. Add your Google OAuth client ID and client secret
-4. Set the redirect URLs for local development:
-   - http://localhost:3000/onboarding
-   - http://127.0.0.1:3000/onboarding
-5. In Settings -> Authentication -> URL Configuration, set:
-   - Site URL = http://localhost:3000
-   - Additional Redirect URLs = http://localhost:3000/onboarding
-
-> Google login will not work unless the Google provider is enabled and the redirect URLs match the ones used by the app.
+| Endpoint | Method | Description |
+|---|---|---|
+| `/api/resumes/parse` | POST | Upload PDF → returns structured JSON |
+| `/api/ats/check` | POST | ATS score check (8 dimensions) |
+| `/api/ats/match-jd` | POST | Match resume against a job description |
+| `/api/ats/customize` | POST | Customize resume for a specific JD |
+| `/api/jobs/` | GET | List all jobs (with filters) |
+| `/api/jobs/refresh` | POST | Run live job search pipeline |
+| `/api/jobs/parse-resume` | POST | Upload PDF → get suggested roles & location |
+| `/api/recruiters/jobs/{id}/bulk-resumes` | POST | Bulk upload candidate PDFs |
+| `/api/recruiters/jobs/{id}/candidates` | GET | Get all candidates for a job |
+| `/api/recruiters/jobs/{id}/rank` | POST | Auto-rank candidates |
+| `/api/interviews/` | POST | Schedule an interview |
+| `/api/interviews/{id}/feedback` | PATCH | Submit interview feedback |
 
 ---
 
-## 6) Optional AI keys
+## ❓ Troubleshooting
 
-The resume parsing feature uses AI services. If you want that feature to work, add one of the following:
-- Groq: `GROQ_API_KEY`
-- Gemini: `GEMINI_API_KEY`
-
-If both are missing, resume parsing may fail.
-
----
-
-## 7) Common issues
-
-### "Supabase URL or Anon Key missing"
-Make sure you created [frontend/.env.local](frontend/.env.local) correctly.
-
-### "Google login redirect mismatch"
-Make sure the redirect URL in Supabase matches the app URL exactly.
-
-### "Module not found" or dependency errors
-Run:
-```bash
-npm install
-pip install -r requirements.txt
-```
-
-### "Port already in use"
-Use a different port:
-```bash
-uvicorn main:app --reload --port 8001
-```
-
----
-
-## 8) Final check
-
-If everything is set up correctly:
-- Backend: http://localhost:8000/docs should open
-- Frontend: http://localhost:3000 should open
-- Google login should redirect to onboarding after authentication
-
-
-
-
-## 9) How to Setup Google Auth + Supabase Setup
-1.	Get your Google Credentials:
--	Go to the Google Cloud Console.
--	Create a new project (or select an existing one).
--	Go to APIs & Services > Credentials.
--	Click Create Credentials and choose OAuth client ID.
--	Select Web application as the application type.
--	For Authorized JavaScript origins, add your local URL: http://localhost:3000 (and your production URL later).
--	For Authorized redirect URIs, add this exact URL from your Supabase dashboard: https://<your-project-ref>.supabase.co/auth/v1/callback
--	Copy the generated Client ID and Client Secret.
-2.	Enable Google Provider in Supabase:
--	Open your Supabase Dashboard and go to your project.
--	Go to Authentication > Providers in the left sidebar.
--	Find Google in the list and click it.
--	Toggle Enable Google Provider to ON.
--	Paste the Client ID and Client Secret you got from Google and Hit Save.
-
-Team Collaboration Setup 
-Bhavneesh : ats branch
-Arpit : feature/job-web-search
+| Problem | Solution |
+|---|---|
+| `SUPABASE_URL or SUPABASE_KEY not found` | Check your `.env` file has the correct keys without extra spaces/quotes |
+| `GROQ_API_KEY not found` | Ensure `GROQ_API_KEY` is set in `backend/.env` |
+| Google Login not working | Make sure you've configured Google OAuth in Supabase → Authentication → Providers → Google, and added the correct redirect URI in Google Cloud Console |
+| `Module not found: fitz` | Run `pip install PyMuPDF` — the package name is PyMuPDF but it's imported as `fitz` |
+| Frontend can't reach backend | Ensure backend is running on port 8000 and `NEXT_PUBLIC_API_URL=http://localhost:8000` in `.env.local` |
+| Job search returns empty | Check that `SARVAM_API_KEY` and `SERPAPI_API_KEY` are set in `backend/.env` |
