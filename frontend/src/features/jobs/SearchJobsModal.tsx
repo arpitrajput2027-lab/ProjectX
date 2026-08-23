@@ -270,7 +270,7 @@ export default function SearchJobsModal({ onClose, onSearch }: SearchJobsModalPr
                   Drag & drop your resume (PDF)
                 </p>
                 <p className="font-sans text-[11px] text-ink-3 leading-none">
-                  or click to browse — we'll pull matching roles from it directly
+                  or click to browse — we&apos;ll pull matching roles from it directly
                 </p>
               </div>
             </div>

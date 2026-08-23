@@ -82,6 +82,7 @@ export function BulkResumeView() {
 
   useEffect(() => {
     if (activeTab === 'candidates' || activeTab === 'ranking') {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       fetchCandidates();
     }
   }, [activeTab, selectedJobId]);
@@ -354,7 +355,7 @@ export function BulkResumeView() {
         
         <div className="space-y-4 mb-6">
           <div>
-            <label className="block text-xs font-mono uppercase tracking-widest text-muted mb-2">Select Top 'K'</label>
+            <label className="block text-xs font-mono uppercase tracking-widest text-muted mb-2">Select Top &apos;K&apos;</label>
             <input type="number" defaultValue={5} min={1} className="w-full bg-cream border border-rule-med rounded-md px-3 py-2 text-sm focus:border-accent outline-none" />
           </div>
           <div>

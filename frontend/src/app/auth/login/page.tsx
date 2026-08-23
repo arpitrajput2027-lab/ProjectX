@@ -105,7 +105,7 @@ export default function LoginPage() {
         </button>
         
         <div className="text-center text-sm text-ink-3">
-          Don't have an account? <Link href="/auth/signup" className="text-accent hover:underline">Sign up</Link>
+          Don&apos;t have an account? <Link href="/auth/signup" className="text-accent hover:underline">Sign up</Link>
         </div>
       </div>
     </div>

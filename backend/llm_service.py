@@ -108,9 +108,56 @@ def extract_resume_data(raw_text: str) -> dict:
             raise ValueError("GEMINI_API_KEY not found, and Groq failed.")
             
         genai.configure(api_key=gemini_key)
-        model = genai.GenerativeModel('gemini-2.0-flash', generation_config={"response_mime_type": "application/json"})
+        model = genai.GenerativeModel('gemini-3.6-flash', generation_config={"response_mime_type": "application/json"})
         
         prompt = f"{system_prompt}\n\nResume Text:\n{raw_text}"
+        response = model.generate_content(prompt)
+        
+        return json.loads(response.text)
+
+def chat_resume_edit(profile_data: dict, user_prompt: str) -> dict:
+    """Takes current profile data and a user prompt, returning the updated profile data (or specific sections)."""
+    
+    system_prompt = """
+    You are an AI Resume Editing Assistant. 
+    You are given the user's current resume JSON and a user prompt (requesting an edit, addition, or advice).
+    Your task is to return a JSON object with two keys:
+    1. "reply": A friendly, concise message acknowledging what you changed or answering the user's question.
+    2. "updated_profile": The complete modified resume JSON reflecting the requested changes. ONLY include fields that were updated or needed to be kept. Usually, you should just return the whole updated profile data object.
+    
+    If the user asks a question without needing an edit, just return the "reply" and omit or return the original "updated_profile".
+    """
+    
+    try:
+        groq_key = os.getenv("GROQ_API_KEY")
+        if not groq_key:
+            raise ValueError("GROQ_API_KEY not found")
+            
+        client = Groq(api_key=groq_key)
+        completion = client.chat.completions.create(
+            model="llama-3.3-70b-versatile",
+            messages=[
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": f"Current Resume:\n{json.dumps(profile_data)}\n\nUser Request: {user_prompt}"}
+            ],
+            temperature=0.2,
+            response_format={"type": "json_object"}
+        )
+        
+        result_str = completion.choices[0].message.content
+        return json.loads(result_str)
+        
+    except Exception as e:
+        print(f"Groq chat failed: {e}. Falling back to Gemini...")
+        
+        gemini_key = os.getenv("GEMINI_API_KEY")
+        if not gemini_key:
+            raise ValueError("GEMINI_API_KEY not found, and Groq failed.")
+            
+        genai.configure(api_key=gemini_key)
+        model = genai.GenerativeModel('gemini-3.6-flash', generation_config={"response_mime_type": "application/json"})
+        
+        prompt = f"{system_prompt}\n\nCurrent Resume:\n{json.dumps(profile_data)}\n\nUser Request: {user_prompt}"
         response = model.generate_content(prompt)
         
         return json.loads(response.text)

@@ -15,6 +15,7 @@ export default function ExperienceModal({ isOpen, onClose, resumeId, initialExpe
 
   useEffect(() => {
     if (isOpen) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setExperienceList([...initialExperience]);
       setSelectedIndex(0);
     }

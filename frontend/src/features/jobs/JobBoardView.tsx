@@ -56,6 +56,7 @@ export function JobBoardView() {
   };
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchData();
   }, []);
 
@@ -139,7 +140,7 @@ export function JobBoardView() {
             <Search className="w-6 h-6 text-muted" />
           </div>
           <h3 className="font-serif text-xl text-ink mb-2">No jobs found</h3>
-          <p className="text-sm text-ink-3 max-w-sm mx-auto">We couldn't find any jobs matching your current search criteria. Try adjusting your filters.</p>
+          <p className="text-sm text-ink-3 max-w-sm mx-auto">We couldn&apos;t find any jobs matching your current search criteria. Try adjusting your filters.</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 gap-4">

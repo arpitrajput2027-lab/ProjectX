@@ -20,7 +20,7 @@ export default function AchievementModal({ isOpen, onClose, initialAchievements,
 
   useEffect(() => {
     if (isOpen) {
-      setAchievements(initialAchievements.length ? [...initialAchievements] : []);
+      // eslint-disable-next-line react-hooks/set-state-in-effect`r`n      setAchievements(initialAchievements.length ? [...initialAchievements] : []);
     }
   }, [isOpen, initialAchievements]);
 

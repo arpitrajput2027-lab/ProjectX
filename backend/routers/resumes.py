@@ -43,3 +43,21 @@ def get_resume(resume_id: str):
 @router.put("/{resume_id}")
 def update_resume(resume_id: str):
     return {"message": f"Update resume {resume_id}"}
+
+class ResumeChatRequest(BaseModel):
+    profile_data: dict
+    user_prompt: str
+
+@router.post("/chat")
+async def chat_resume(request: ResumeChatRequest):
+    try:
+        from llm_service import chat_resume_edit
+        result = chat_resume_edit(request.profile_data, request.user_prompt)
+        return {
+            "status": "success",
+            "reply": result.get("reply", "I've updated your resume."),
+            "updated_profile": result.get("updated_profile", request.profile_data)
+        }
+    except Exception as e:
+        print(f"Error in chat_resume: {e}")
+        raise HTTPException(status_code=500, detail=str(e))

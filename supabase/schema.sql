@@ -114,6 +114,8 @@ CREATE TABLE applications (
 -- #02 altered the Tables
 -- Changed**
 ALTER TABLE student_profiles
+ADD COLUMN professional_summary TEXT,
+ADD COLUMN linkedin_url TEXT,
 ADD COLUMN education JSONB DEFAULT '[]',
 ADD COLUMN experience JSONB DEFAULT '[]',
 ADD COLUMN projects JSONB DEFAULT '[]',

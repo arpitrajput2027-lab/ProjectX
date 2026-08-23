@@ -15,6 +15,7 @@ export default function SkillModal({ isOpen, onClose, resumeId, initialSkills, o
 
   useEffect(() => {
     if (isOpen) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setSkillCategories([...initialSkills]);
       setSelectedIndex(0);
     }

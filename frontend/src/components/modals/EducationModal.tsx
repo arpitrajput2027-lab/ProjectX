@@ -15,6 +15,7 @@ export default function EducationModal({ isOpen, onClose, resumeId, initialEduca
 
   useEffect(() => {
     if (isOpen) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setEducationList([...initialEducation]);
       setSelectedIndex(0);
     }

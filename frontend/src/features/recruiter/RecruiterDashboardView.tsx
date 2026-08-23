@@ -70,6 +70,7 @@ export function RecruiterDashboardView() {
   };
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchDashboardData();
   }, []);
 
@@ -243,7 +244,7 @@ export function RecruiterDashboardView() {
               <Briefcase className="w-6 h-6 text-muted" />
             </div>
             <h3 className="font-serif text-xl text-ink mb-2">No active jobs</h3>
-            <p className="text-sm text-ink-3 max-w-sm mb-6">You haven't posted any jobs yet. Create your first job posting to start matching with our verified talent pool.</p>
+            <p className="text-sm text-ink-3 max-w-sm mb-6">You haven&apos;t posted any jobs yet. Create your first job posting to start matching with our verified talent pool.</p>
             <button 
               onClick={() => setIsPostJobModalOpen(true)}
               className="bg-white border border-rule-med text-ink px-5 py-2.5 rounded-md font-mono text-[11px] uppercase tracking-widest hover:border-accent hover:text-accent transition-colors"

@@ -175,7 +175,7 @@ export function OnboardingFlow() {
                   <span className="w-1.5 h-1.5 rounded-full bg-accent"></span> Basic Information
                 </div>
                 <h1 className="font-serif text-4xl mb-4 text-ink">Welcome aboard.</h1>
-                <p className="text-sm text-ink-3 mb-10 leading-relaxed max-w-lg">Let's start with the basics. This forms the foundation of your ReadyIndex identity.</p>
+                <p className="text-sm text-ink-3 mb-10 leading-relaxed max-w-lg">Let&apos;s start with the basics. This forms the foundation of your ReadyIndex identity.</p>
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                   <div>

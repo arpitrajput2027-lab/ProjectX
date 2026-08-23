@@ -11,6 +11,7 @@ interface JDMatcherProps {
   profileData: any;
   onApplyCustomization: (customizedProfile: any) => void;
   onSwitchToATS: () => void;
+  onBackToEditor?: () => void;
 }
 
 interface MatchAnalysis {
@@ -50,7 +51,7 @@ interface CustomizationResult {
   warnings?: string[];
 }
 
-export function JDMatcher({ profileData, onApplyCustomization, onSwitchToATS }: JDMatcherProps) {
+export function JDMatcher({ profileData, onApplyCustomization, onSwitchToATS, onBackToEditor }: JDMatcherProps) {
   // Phase state: 1 = Input, 2 = Results, 3 = Customization
   const [phase, setPhase] = useState<1 | 2 | 3>(1);
   
@@ -249,7 +250,7 @@ export function JDMatcher({ profileData, onApplyCustomization, onSwitchToATS }: 
           <div className="flex justify-between items-center">
             <div className="flex items-center space-x-3">
               <button 
-                onClick={() => setPhase(1)}
+                onClick={onBackToEditor || (() => setPhase(1))}
                 className="p-2 rounded-lg bg-cream border border-rule text-ink hover:bg-cream-3 transition-colors"
               >
                 <ChevronLeft className="w-5 h-5" />

@@ -59,3 +59,15 @@ body {
 .editor-border-black {
   border-color: #000000 !important;
 }
+
+/* Print / PDF export page break support */
+@media print {
+  .resume-page-break {
+    page-break-before: always;
+    break-before: page;
+  }
+  section {
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+}

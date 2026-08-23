@@ -253,7 +253,7 @@ export default function AuthModal({ isOpen, onClose, defaultMode = "signup", tar
               </>
             ) : (
               <>
-                Don't have an account?{" "}
+                Don&apos;t have an account?{" "}
                 <button onClick={() => setAuthMode("signup")} className="text-accent cursor-pointer hover:underline font-medium">Sign up</button>
               </>
             )}

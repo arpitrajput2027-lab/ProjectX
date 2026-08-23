@@ -215,7 +215,7 @@ export function TalentPoolView() {
                     </div>
                     <div className="flex flex-col items-center">
                       <div className="w-10 h-10 rounded-full border-2 border-accent flex items-center justify-center bg-accent-lt text-accent text-xs font-bold font-mono">
-                        {Math.floor(Math.random() * 20 + 80)}%
+                        85%
                       </div>
                       <span className="text-[9px] font-mono uppercase tracking-widest text-muted mt-1">Match</span>
                     </div>

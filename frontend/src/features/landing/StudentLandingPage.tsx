@@ -156,7 +156,7 @@ export function StudentLandingPage() {
         <section className="bg-ink py-16 border-t border-rule-med text-cream">
           <div className="max-w-6xl mx-auto px-6 md:px-12 grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
             <p className="font-serif text-xl md:text-2xl font-light leading-relaxed text-[#f4f0e8]">
-              Every year, <strong className="font-normal text-white">1.5 million</strong> engineering students graduate in India. Most don't know exactly where they stand. ReadyIndex changes that — one honest score that tells you <em className="italic text-accent">everything.</em>
+              Every year, <strong className="font-normal text-white">1.5 million</strong> engineering students graduate in India. Most don&apos;t know exactly where they stand. ReadyIndex changes that — one honest score that tells you <em className="italic text-accent">everything.</em>
             </p>
             <div className="flex flex-col gap-6">
               <div className="flex items-baseline gap-4 border-b border-white/10 pb-4">

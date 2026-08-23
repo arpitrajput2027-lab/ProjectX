@@ -189,7 +189,7 @@ export function RecruiterOnboardingFlow() {
                   <UserCircle className="w-3 h-3" /> Your Profile
                 </div>
                 <h1 className="font-serif text-4xl mb-4 text-ink">About you.</h1>
-                <p className="text-sm text-ink-3 mb-10 leading-relaxed max-w-lg">Let candidates know who they'll be speaking with.</p>
+                <p className="text-sm text-ink-3 mb-10 leading-relaxed max-w-lg">Let candidates know who they&apos;ll be speaking with.</p>
                 
                 <div className="space-y-6 mb-10">
                   <div>

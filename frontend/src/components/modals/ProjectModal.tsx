@@ -15,6 +15,7 @@ export default function ProjectModal({ isOpen, onClose, resumeId, initialProject
 
   useEffect(() => {
     if (isOpen) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setProjects([...initialProjects]);
       setSelectedIndex(0);
     }

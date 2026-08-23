@@ -18,6 +18,7 @@ import {
 interface ATSCheckerProps {
   profileData: any;
   onNavigateToSection?: (section: string) => void;
+  onBackToEditor?: () => void;
 }
 
 type DimensionScore = {
@@ -55,7 +56,7 @@ const getScoreBg = (score: number) => {
   return "bg-red-600";
 };
 
-export function ATSChecker({ profileData, onNavigateToSection }: ATSCheckerProps) {
+export function ATSChecker({ profileData, onNavigateToSection, onBackToEditor }: ATSCheckerProps) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [results, setResults] = useState<ATSResponse | null>(null);
@@ -444,7 +445,16 @@ export function ATSChecker({ profileData, onNavigateToSection }: ATSCheckerProps
       )}
 
       {/* Re-analyze Button */}
-      <div className="pt-6 flex justify-center border-t border-rule">
+      <div className="pt-6 flex justify-center border-t border-rule space-x-4">
+        {onBackToEditor && (
+          <button
+            onClick={onBackToEditor}
+            className="px-6 py-2.5 bg-white border border-rule-med text-ink hover:border-accent hover:text-accent rounded-xl shadow-sm transition-all duration-300 font-medium flex items-center gap-2"
+          >
+            <FileText className="w-4 h-4" />
+            Back to Resume Editor
+          </button>
+        )}
         <button
           onClick={analyzeResume}
           className="px-6 py-2.5 bg-ink text-cream hover:bg-accent rounded-xl shadow-sm transition-all duration-300 font-medium flex items-center gap-2"

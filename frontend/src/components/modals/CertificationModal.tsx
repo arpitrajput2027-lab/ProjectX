@@ -21,6 +21,7 @@ export default function CertificationModal({ isOpen, onClose, initialCertificati
 
   useEffect(() => {
     if (isOpen) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setCertifications(initialCertifications.length ? [...initialCertifications] : []);
     }
   }, [isOpen, initialCertifications]);
