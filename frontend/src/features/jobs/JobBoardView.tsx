@@ -93,7 +93,7 @@ export function JobBoardView() {
   return (
     <div className="p-8 max-w-5xl mx-auto font-body animate-in fade-in duration-500">
       <header className="mb-8">
-        <h1 className="font-serif text-4xl text-ink mb-2">Jobs on ReadyIndex</h1>
+        <h1 className="font-serif text-4xl text-ink mb-2">Jobs on Katalyst Hire</h1>
         <p className="text-sm text-ink-3">Discover and apply to roles matched to your verified skills.</p>
       </header>
 

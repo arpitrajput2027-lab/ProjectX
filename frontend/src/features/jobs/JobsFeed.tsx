@@ -136,7 +136,7 @@ export default function JobsFeed() {
             <div>
               <h1 className="font-serif text-2xl font-bold text-ink">Browse Jobs</h1>
               <p className="text-xs text-ink-3">
-                Score and find positions matching your ReadyIndex profile.
+                Score and find positions matching your Katalyst Hire profile.
               </p>
             </div>
           </div>

@@ -111,9 +111,8 @@ export function RecruiterOnboardingFlow() {
   return (
     <div className="min-h-screen bg-cream text-ink font-body flex flex-col" suppressHydrationWarning>
       <header className="flex justify-between items-center px-10 py-5 border-b border-rule-lt bg-cream/95 backdrop-blur-sm sticky top-0 z-10">
-        <div className="flex items-center gap-2">
-          <div className="w-5 h-5 bg-ink text-cream rounded-[2px] flex items-center justify-center font-serif font-bold text-[10px]">RI</div>
-          <span className="font-mono text-[10px] tracking-widest text-ink uppercase font-semibold">ReadyIndex</span>
+        <div className="absolute top-6 left-6 flex items-center">
+          <img src="/katalyst-hire-horizontal.png" alt="Katalyst Hire" style={{ width: '150px', height: 'auto' }} className="object-contain border border-black rounded-[5%]" />
         </div>
         <div className="text-xs text-ink-3 font-mono">{userEmail}</div>
       </header>

@@ -121,7 +121,7 @@ export default function SearchJobsModal({ onClose, onSearch }: SearchJobsModalPr
     setResumeFile(file);
     setExtracting(true);
     try {
-      // Use ReadyIndex backend parser to extract resume info
+      // Use Katalyst Hire backend parser to extract resume info
       const result = await parseResume(file);
       if (!result.resume_text) {
         setResumeError("Couldn't read any text from that PDF — try a different file.");

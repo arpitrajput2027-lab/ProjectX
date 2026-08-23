@@ -18,9 +18,8 @@ export function RecruiterLandingPage() {
     <div className="min-h-screen bg-cream text-ink font-body selection:bg-accent selection:text-cream">
       {/* --- NAVIGATION --- */}
       <header className="fixed top-0 left-0 right-0 h-[72px] z-40 bg-cream/95 backdrop-blur-md border-b border-rule-lt flex items-center justify-between px-6 md:px-12 transition-all">
-        <Link href="/" className="flex items-center gap-3 group">
-          <div className="w-6 h-6 bg-ink text-cream rounded-[3px] flex items-center justify-center font-serif font-bold text-sm transition-transform group-hover:scale-105">RI</div>
-          <span className="font-mono text-xs tracking-widest text-ink uppercase font-semibold">ReadyIndex</span>
+        <Link href="/" className="flex items-center group">
+          <img src="/katalyst-hire-horizontal.png" alt="Katalyst Hire" style={{ width: '170px', height: 'auto' }} className="object-contain transition-transform group-hover:scale-105 border border-black rounded-[5%]" />
         </Link>
         <div className="flex items-center gap-8 hidden md:flex">
           <a href="#talent-pool" className="font-mono text-[10px] tracking-widest uppercase text-ink-3 hover:text-ink transition-colors pb-1 border-b border-transparent hover:border-accent">Talent Pool</a>
@@ -162,7 +161,7 @@ export function RecruiterLandingPage() {
                 { icon: <Search />, title: "AI-Powered Talent Pool", desc: "Search a database of students ranked not by college name, but by verified GitHub commits, LeetCode stats, and actual code output." },
                 { icon: <Target />, title: "AI Candidate Matching", desc: "Upload your Job Description. Our AI instantly ranks hundreds of candidates based on how closely their real skills match your requirements." },
                 { icon: <UploadCloud />, title: "Bulk Resume Processing", desc: "Running a campus drive? Upload 100+ resumes at once. AI parses them, creates profiles, and ranks them against your target role instantly." },
-                { icon: <Filter />, title: "Advanced Filtering", desc: "Filter the talent pool by specific targeting roles (e.g. AI/ML Engineer), framework experience, or ReadyIndex ATS Score." },
+                { icon: <Filter />, title: "Advanced Filtering", desc: "Filter the talent pool by specific targeting roles (e.g. AI/ML Engineer), framework experience, or Katalyst Hire ATS Score." },
                 { icon: <Mail />, title: "Automated Bulk Email", desc: "Select 50 shortlisted candidates and send a customized assessment invite in one click. Dynamic templates insert names and roles automatically." },
                 { icon: <BarChart />, title: "Pipeline Analytics", desc: "Track your entire funnel on a centralized dashboard. See application drop-offs, average match scores, and hiring velocity in real time." },
               ].map((feat, i) => (
@@ -201,9 +200,8 @@ export function RecruiterLandingPage() {
       {/* --- FOOTER --- */}
       <footer className="bg-ink border-t border-white/10 py-12 text-cream">
         <div className="max-w-6xl mx-auto px-6 md:px-12 flex flex-col md:flex-row justify-between items-center gap-6">
-          <div className="flex items-center gap-3">
-            <div className="w-5 h-5 bg-cream text-ink rounded-[2px] flex items-center justify-center font-serif font-bold text-[10px]">RI</div>
-            <span className="font-mono text-[10px] tracking-widest text-cream uppercase font-semibold">ReadyIndex</span>
+          <div className="flex items-center">
+            <img src="/katalyst-hire-horizontal-dark.png" alt="Katalyst Hire" style={{ width: '150px', height: 'auto' }} className="object-contain opacity-80 border border-black rounded-[5%]" />
           </div>
           <div className="font-mono text-[9px] tracking-widest text-cream/40 uppercase">
             © 2025 · The New Standard in Hiring

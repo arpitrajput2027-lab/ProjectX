@@ -11,9 +11,8 @@ export function LandingPage() {
     <div className="min-h-screen bg-cream text-ink font-body selection:bg-accent selection:text-cream flex flex-col">
       {/* --- NAVIGATION --- */}
       <header className="fixed top-0 left-0 right-0 h-[72px] z-40 bg-cream/80 backdrop-blur-md border-b border-rule-lt flex items-center justify-between px-6 md:px-12">
-        <div className="flex items-center gap-3">
-          <div className="w-6 h-6 bg-ink text-cream rounded-[4px] flex items-center justify-center font-serif font-bold text-sm">RI</div>
-          <span className="font-mono text-xs tracking-widest text-ink uppercase font-semibold">ReadyIndex</span>
+        <div className="flex items-center">
+          <img src="/katalyst-hire-horizontal.png" alt="Katalyst Hire" style={{ width: '170px', height: 'auto' }} className="object-contain border border-black rounded-[5%]" />
         </div>
       </header>
 
@@ -64,7 +63,7 @@ export function LandingPage() {
 
       {/* --- FOOTER --- */}
       <footer className="border-t border-rule-lt py-6 bg-cream text-center mt-auto">
-        <div className="font-mono text-[10px] tracking-widest text-ink-3 uppercase">ReadyIndex © 2025</div>
+        <div className="font-mono text-[10px] tracking-widest text-ink-3 uppercase">Katalyst Hire © 2025</div>
       </footer>
     </div>
   );

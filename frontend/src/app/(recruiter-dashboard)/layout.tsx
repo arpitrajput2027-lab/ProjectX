@@ -53,8 +53,7 @@ export default function RecruiterDashboardLayout({
       {/* Sidebar */}
       <aside className="w-64 bg-ink text-cream flex flex-col shadow-xl z-20">
         <div className="h-16 flex items-center px-6 border-b border-rule-med bg-ink-2/30">
-          <Briefcase className="w-5 h-5 text-accent mr-3" />
-          <h1 className="font-serif text-xl font-semibold tracking-wide text-cream">ReadyIndex</h1>
+          <img src="/katalyst-hire-horizontal.png" alt="Katalyst Hire" style={{ width: '170px', height: 'auto' }} className="object-contain border border-black rounded-[3%]" />
         </div>
         
         <nav className="flex flex-col py-6 px-3 space-y-1">

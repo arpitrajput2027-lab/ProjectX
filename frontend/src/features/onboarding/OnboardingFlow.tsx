@@ -143,9 +143,8 @@ export function OnboardingFlow() {
   return (
     <div className="min-h-screen bg-cream text-ink font-body flex flex-col" suppressHydrationWarning>
       <header className="flex justify-between items-center px-10 py-5 border-b border-rule-lt bg-cream/95 backdrop-blur-sm sticky top-0 z-10">
-        <div className="flex items-center gap-2">
-          <div className="w-5 h-5 bg-ink text-cream rounded-[2px] flex items-center justify-center font-serif font-bold text-[10px]">RI</div>
-          <span className="font-mono text-[10px] tracking-widest text-ink uppercase font-semibold">ReadyIndex</span>
+        <div className="absolute top-6 left-6 flex items-center">
+          <img src="/katalyst-hire-horizontal.png" alt="Katalyst Hire" style={{ width: '150px', height: 'auto' }} className="object-contain border border-black rounded-[5%]" />
         </div>
         <div className="text-xs text-ink-3 font-mono">{userEmail}</div>
       </header>
@@ -175,7 +174,7 @@ export function OnboardingFlow() {
                   <span className="w-1.5 h-1.5 rounded-full bg-accent"></span> Basic Information
                 </div>
                 <h1 className="font-serif text-4xl mb-4 text-ink">Welcome aboard.</h1>
-                <p className="text-sm text-ink-3 mb-10 leading-relaxed max-w-lg">Let&apos;s start with the basics. This forms the foundation of your ReadyIndex identity.</p>
+                <p className="text-sm text-ink-3 mb-10 leading-relaxed max-w-lg">Let&apos;s start with the basics. This forms the foundation of your Katalyst Hire identity.</p>
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                   <div>
@@ -307,7 +306,7 @@ export function OnboardingFlow() {
                   <span className="w-1.5 h-1.5 rounded-full bg-accent"></span> Proof of Work
                 </div>
                 <h1 className="font-serif text-4xl mb-4 text-ink">Verify your skills</h1>
-                <p className="text-sm text-ink-3 mb-10 leading-relaxed max-w-lg">ReadyIndex ranks you based on verified code. Connect your public platforms.</p>
+                <p className="text-sm text-ink-3 mb-10 leading-relaxed max-w-lg">Katalyst Hire ranks you based on verified code. Connect your public platforms.</p>
                 
                 <div className="space-y-4">
                   {/* GitHub */}

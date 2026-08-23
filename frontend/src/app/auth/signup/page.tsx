@@ -61,7 +61,7 @@ function SignupForm() {
     <div className="min-h-screen bg-cream flex items-center justify-center p-6">
       <div className="bg-white border border-rule-med p-8 rounded-md w-full max-w-md shadow-sm">
         <h1 className="font-serif text-3xl text-ink mb-2">Create an Account</h1>
-        <p className="text-sm text-ink-3 mb-6">Join ReadyIndex and discover your score.</p>
+        <p className="text-sm text-ink-3 mb-6">Join Katalyst Hire and discover your score.</p>
         
         {error && <div className="mb-4 text-xs text-red-500 bg-red-50 p-2 rounded">{error}</div>}
 

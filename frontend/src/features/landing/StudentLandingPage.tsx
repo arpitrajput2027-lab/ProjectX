@@ -19,9 +19,8 @@ export function StudentLandingPage() {
     <div className="min-h-screen bg-cream text-ink font-body selection:bg-accent selection:text-cream">
       {/* --- NAVIGATION --- */}
       <header className="fixed top-0 left-0 right-0 h-[72px] z-40 bg-cream/95 backdrop-blur-md border-b border-rule-lt flex items-center justify-between px-6 md:px-12 transition-all">
-        <Link href="/" className="flex items-center gap-3 group">
-          <div className="w-6 h-6 bg-ink text-cream rounded-[3px] flex items-center justify-center font-serif font-bold text-sm transition-transform group-hover:scale-105">RI</div>
-          <span className="font-mono text-xs tracking-widest text-ink uppercase font-semibold">ReadyIndex</span>
+        <Link href="/" className="flex items-center group">
+          <img src="/katalyst-hire-horizontal.png" alt="Katalyst Hire" style={{ width: '170px', height: 'auto' }} className="object-contain transition-transform group-hover:scale-105 border border-black rounded-[5%]" />
         </Link>
         <div className="flex items-center gap-8 hidden md:flex">
           <a href="#how-it-works" className="font-mono text-[10px] tracking-widest uppercase text-ink-3 hover:text-ink transition-colors pb-1 border-b border-transparent hover:border-accent">How it works</a>
@@ -61,7 +60,7 @@ export function StudentLandingPage() {
             </h1>
             
             <p className="text-lg md:text-xl text-ink-3 font-light leading-relaxed mb-10 max-w-lg">
-              ReadyIndex pulls your LeetCode, GitHub, LinkedIn & resume — analyzes everything in one place — and tells you <em className="text-accent italic">exactly</em> where you stand. No CGPA. No college filter. Skills only.
+              Katalyst Hire pulls your LeetCode, GitHub, LinkedIn & resume — analyzes everything in one place — and tells you <em className="text-accent italic">exactly</em> where you stand. No CGPA. No college filter. Skills only.
             </p>
 
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-6 mb-12">
@@ -124,7 +123,7 @@ export function StudentLandingPage() {
                   <text x="25" y="60" fontSize="8" fill="#8b6a3e" className="font-mono">76%</text>
                 </svg>
                 <div className="font-serif text-5xl text-ink leading-none mb-1">72%</div>
-                <div className="font-mono text-[8px] text-muted uppercase tracking-widest">ReadyIndex Score</div>
+                <div className="font-mono text-[8px] text-muted uppercase tracking-widest">Katalyst Hire Score</div>
               </div>
 
               <div className="space-y-2 mb-6">
@@ -156,7 +155,7 @@ export function StudentLandingPage() {
         <section className="bg-ink py-16 border-t border-rule-med text-cream">
           <div className="max-w-6xl mx-auto px-6 md:px-12 grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
             <p className="font-serif text-xl md:text-2xl font-light leading-relaxed text-[#f4f0e8]">
-              Every year, <strong className="font-normal text-white">1.5 million</strong> engineering students graduate in India. Most don&apos;t know exactly where they stand. ReadyIndex changes that — one honest score that tells you <em className="italic text-accent">everything.</em>
+              Every year, <strong className="font-normal text-white">1.5 million</strong> engineering students graduate in India. Most don&apos;t know exactly where they stand. Katalyst Hire changes that — one honest score that tells you <em className="italic text-accent">everything.</em>
             </p>
             <div className="flex flex-col gap-6">
               <div className="flex items-baseline gap-4 border-b border-white/10 pb-4">
@@ -269,7 +268,7 @@ export function StudentLandingPage() {
               Stop guessing. <br /><em className="italic text-[#8b6a3e]">Start matching.</em>
             </h2>
             <p className="text-cream/50 mb-10 max-w-md mx-auto">
-              Join thousands of engineering students who use ReadyIndex to prove their skills and land better jobs.
+              Join thousands of engineering students who use Katalyst Hire to prove their skills and land better jobs.
             </p>
             <button 
               onClick={() => openAuth("signup")}
@@ -284,9 +283,8 @@ export function StudentLandingPage() {
       {/* --- FOOTER --- */}
       <footer className="bg-[#f4f0e8] border-t border-rule-lt py-12">
         <div className="max-w-6xl mx-auto px-6 md:px-12 flex flex-col md:flex-row justify-between items-center gap-6">
-          <div className="flex items-center gap-3">
-            <div className="w-5 h-5 bg-ink text-cream rounded-[2px] flex items-center justify-center font-serif font-bold text-[10px]">RI</div>
-            <span className="font-mono text-[10px] tracking-widest text-ink uppercase font-semibold">ReadyIndex</span>
+          <div className="flex items-center">
+            <img src="/katalyst-hire-horizontal.png" alt="Katalyst Hire" style={{ width: '150px', height: 'auto' }} className="object-contain opacity-80 border border-black rounded-[5%]" />
           </div>
           <div className="font-mono text-[9px] tracking-widest text-muted uppercase">
             © 2025 · The New Standard in Hiring

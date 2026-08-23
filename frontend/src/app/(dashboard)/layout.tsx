@@ -21,10 +21,7 @@ export default function DashboardLayout({
       {/* Sidebar */}
       <aside className="w-64 bg-ink text-cream flex flex-col shadow-xl z-20">
         <div className="h-16 flex items-center px-6 border-b border-rule-med bg-ink-2/30">
-          <Briefcase className="w-5 h-5 text-accent mr-3" />
-          <h1 className="font-serif text-xl font-semibold tracking-wide text-cream">
-            ProjectX
-          </h1>
+          <img src="/katalyst-hire-horizontal.png" alt="Katalyst Hire" style={{ width: '170px', height: 'auto' }} className="object-contain border border-black rounded-[5%]" />
         </div>
 
         <nav className="flex flex-col py-6 px-3 space-y-1">
@@ -57,11 +54,11 @@ export default function DashboardLayout({
           </Link>
 
           <Link
-            href="/readyindex-jobs"
+            href="/Katalyst Hire-jobs"
             className="flex items-center px-3 py-2.5 rounded-md hover:bg-ink-2 transition-colors font-medium text-sm text-cream-2 group"
           >
             <Target className="w-4 h-4 mr-3 opacity-70 group-hover:opacity-100 group-hover:text-accent" />
-            Jobs on ReadyIndex
+            Jobs on Katalyst Hire
           </Link>
 
           <Link
