@@ -215,9 +215,9 @@ export function TalentPoolView() {
                     </div>
                     <div className="flex flex-col items-center">
                       <div className="w-10 h-10 rounded-full border-2 border-accent flex items-center justify-center bg-accent-lt text-accent text-xs font-bold font-mono">
-                        85%
+                        {student.katalyst_score || "N/A"}
                       </div>
-                      <span className="text-[9px] font-mono uppercase tracking-widest text-muted mt-1">Match</span>
+                      <span className="text-[9px] font-mono uppercase tracking-widest text-muted mt-1">Score</span>
                     </div>
                   </div>
                   

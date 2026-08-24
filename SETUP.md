@@ -1,5 +1,13 @@
 Checking.....
 
+Ok Now The Score IS working Properly .. Now I want ki Just Score ke saath button ho Deatiled Analysis jha pr sclick krte huiu ek pop screen Open Hogi .. Jisme Stduent ki differnet score mention honge Like Project , Target Job Alignment , Github and Resume , Technical Skills , vgera vgera ,, and uske saath hi Recommendation bhi hongi nuche ki hme kya kya krna chiye kya nhi krna chiye for example Project ko structure krke deploy kro , Leetcode pr thode aur question solve kro kitki Tum SWE role target kr rhe ho .. And ese hi aur recommendation dena hai..on the basis of alll over info about the Student Github , Leetcode, Resume 
+
+
+
+
+
+
+
 
 # Setup Guide
 

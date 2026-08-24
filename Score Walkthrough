@@ -1,0 +1,40 @@
+# Katalyst Score Implemented
+
+I have successfully added the Katalyst Scoring system to both the Student and Recruiter flows! 
+
+## What changed?
+
+### 1. The Core Scorer Engine
+A new module `readyindex_scorer.py` is now in your backend. It handles fetching and calculating scores natively using your LeetCode and GitHub API snippets.
+
+### 2. Live Re-Calculation
+Added new API routes to `/api/students/{id}/katalyst-score`. When the student clicks "Recalculate" on their profile, it fetches fresh data directly from GitHub and LeetCode in real-time, stores the result, and breaks down the calculation.
+
+### 3. Student Profile View
+The student profile now features a **Katalyst Score Card** at the top next to the identity and resume buttons. It allows students to explicitly update and see their score out of 100 points, complete with a visual indicator and recalculation loading states.
+
+### 4. Recruiter Talent Pool
+The Recruiter Talent pool no longer shows a dummy `85% Match`! Instead, it pulls the actual `katalyst_score` generated for that specific student, allowing recruiters to make informed decisions about candidate proficiency.
+
+---
+
+> [!CAUTION]
+> **Action Required: Run SQL Migration**
+> To store these scores, you must run a quick SQL command in your Supabase SQL Editor. 
+> I have saved this script as `supabase_migration.sql` in your project folder.
+> 
+> ```sql
+> -- Add katalyst_score columns to student_profiles table
+> ALTER TABLE public.student_profiles
+> ADD COLUMN katalyst_score integer NULL,
+> ADD COLUMN katalyst_score_breakdown jsonb NULL;
+> ```
+
+---
+
+## How to Test
+1. Run the SQL Migration in Supabase.
+2. Go to your local frontend and view a Student Profile.
+3. Add a valid `github_username` and `leetcode_username` to the profile.
+4. Click **Recalculate** in the new Katalyst Score card!
+5. Open the Talent Pool view and notice the updated scores.

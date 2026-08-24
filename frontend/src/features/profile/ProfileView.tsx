@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
-import { Save, ArrowRight, Pencil, FileText, BarChart2, X, GitBranch, Code } from "lucide-react";
+import { Save, ArrowRight, Pencil, FileText, BarChart2, X, GitBranch, Code, RefreshCw, Activity } from "lucide-react";
 
 import ProjectModal from "@/components/modals/ProjectModal";
 import EducationModal from "@/components/modals/EducationModal";
@@ -17,6 +17,7 @@ export function ProfileView({ studentId, readOnly }: { studentId?: string; readO
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [profile, setProfile] = useState<any>(null);
+  const [computingScore, setComputingScore] = useState(false);
 
   // Drawer state
   const [isStatsDrawerOpen, setIsStatsDrawerOpen] = useState(false);
@@ -104,6 +105,33 @@ export function ProfileView({ studentId, readOnly }: { studentId?: string; readO
     }
   };
 
+  const handleCalculateScore = async () => {
+    if (!profile) return;
+    setComputingScore(true);
+    try {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+      const res = await fetch(`${apiUrl}/api/students/${profile.id}/katalyst-score`, {
+        method: "POST"
+      });
+      if (!res.ok) {
+        const errData = await res.json().catch(() => ({}));
+        console.error("Backend error:", errData);
+        throw new Error(errData.detail || "Failed to compute score");
+      }
+      const data = await res.json();
+      setProfile((prev: any) => ({
+        ...prev,
+        katalyst_score: data.data.total_score,
+        katalyst_score_breakdown: data.data.components
+      }));
+    } catch (error) {
+      console.error(error);
+      alert("Failed to calculate Katalyst score.");
+    } finally {
+      setComputingScore(false);
+    }
+  };
+
   if (loading) return <div className="p-24 text-center font-mono uppercase tracking-widest text-muted">Loading profile...</div>;
   if (!profile) return null; // Let the redirect handle it
 
@@ -162,6 +190,31 @@ export function ProfileView({ studentId, readOnly }: { studentId?: string; readO
               </button>
             </div>
           )}
+
+          {/* Katalyst Score Card */}
+          <div className="bg-white rounded-xl border border-rule-med p-6 flex items-center justify-between shadow-sm">
+            <div className="flex items-center space-x-4">
+              <div className={`w-12 h-12 rounded-full border-4 flex items-center justify-center text-sm font-bold ${profile.katalyst_score ? 'border-accent text-accent' : 'border-rule text-muted'}`}>
+                {profile.katalyst_score || "N/A"}
+              </div>
+              <div>
+                <h3 className="font-semibold text-ink flex items-center space-x-2">
+                  <Activity className="w-4 h-4 text-accent" />
+                  <span>Katalyst Score</span>
+                </h3>
+                <p className="text-xs text-ink-3 mt-1">Out of 100 points</p>
+              </div>
+            </div>
+            {!readOnly && (
+              <button 
+                onClick={handleCalculateScore}
+                disabled={computingScore}
+                className="text-xs font-medium bg-cream-2 border border-rule-med hover:border-accent text-ink-2 hover:text-accent px-3 py-1.5 rounded flex items-center space-x-2 cursor-pointer transition-colors disabled:opacity-50"
+              >
+                {computingScore ? <RefreshCw className="w-3 h-3 animate-spin" /> : <span>Recalculate</span>}
+              </button>
+            )}
+          </div>
         </div>
       </div>
 

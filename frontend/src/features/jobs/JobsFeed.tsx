@@ -163,7 +163,7 @@ export default function JobsFeed() {
         {refreshing && (
           <div className="flex items-center gap-2 font-mono text-xs text-accent bg-accent-lt border border-accent/15 px-4 py-3 rounded-lg animate-pulse">
             <RefreshCw className="w-3.5 h-3.5 animate-spin" />
-            <span>Sourcing job boards (LinkedIn, Naukri, Indeed) and scoring with Sarvam AI...</span>
+            <span>Sourcing latest jobs across the web using Google Jobs API...</span>
           </div>
         )}
 

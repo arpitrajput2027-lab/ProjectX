@@ -16,9 +16,9 @@ SARVAM_MODEL = os.getenv("SARVAM_MODEL", "sarvam-105b")
 SERPAPI_API_KEY = os.getenv("SERPAPI_API_KEY", "")
 
 DEFAULT_SEARCH_QUERIES = [
-    'site:linkedin.com/jobs "Python Developer" "Remote" India',
-    'site:naukri.com "Python Developer" "3 years" Delhi',
-    'site:indeed.com "Data Analyst" "Remote" India',
+    '"Python Developer" (jobs OR hiring OR careers) "Remote" India',
+    '"Python Developer" (jobs OR hiring OR careers) "Delhi"',
+    '"Data Analyst" (jobs OR hiring OR careers) "Remote" India',
 ]
 
 LISTING_PAGE_PATTERNS = [
@@ -123,7 +123,7 @@ def _search(query: str, max_results: int = 15) -> List[dict]:
     results = []
     try:
         with DDGS() as ddgs:
-            for r in ddgs.text(query, max_results=max_results):
+            for r in ddgs.text(query, max_results=max_results, timelimit="w"):
                 results.append({
                     "title": r.get("title", ""),
                     "url": r.get("href", ""),
@@ -144,6 +144,7 @@ def _search_serpapi(query: str, api_key: str) -> List[dict]:
         "q": query,
         "api_key": api_key,
         "hl": "en",
+        "chips": "date_posted:week",
     }
     try:
         resp = requests.get(url, params=params, timeout=20)
@@ -199,13 +200,11 @@ def build_queries_for_roles(
     """Build DuckDuckGo search queries from user-chosen job roles + location."""
     queries: List[str] = []
     loc = location.strip() if location else "India"
-    sites = ["linkedin.com/jobs", "naukri.com", "indeed.com"]
     for role in job_roles:
         role = role.strip()
         if not role:
             continue
-        for site in sites:
-            queries.append(f'site:{site} "{role}" "{loc}"')
+        queries.append(f'"{role}" (jobs OR hiring OR careers) "{loc}"')
     # Deduplicate while preserving order
     seen: set[str] = set()
     unique: List[str] = []
@@ -242,23 +241,24 @@ def run_search(
             serpapi_jobs = _search_serpapi(sq, serpapi_key)
             extracted.extend(serpapi_jobs)
             
-    # 2. DuckDuckGo search
-    ddg_queries = queries
-    if not ddg_queries:
-        if job_roles:
-            ddg_queries = build_queries_for_roles(job_roles, location)
-        else:
-            ddg_queries = DEFAULT_SEARCH_QUERIES
+    # 2. DuckDuckGo search (Fallback if SerpApi fails or key is missing)
+    if not extracted:
+        ddg_queries = queries
+        if not ddg_queries:
+            if job_roles:
+                ddg_queries = build_queries_for_roles(job_roles, location)
+            else:
+                ddg_queries = DEFAULT_SEARCH_QUERIES
+                
+        raw_results = []
+        for q in ddg_queries:
+            raw_results.extend(_search(q))
             
-    raw_results = []
-    for q in ddg_queries:
-        raw_results.extend(_search(q))
-        
-    for r in raw_results:
-        if _is_listing_page(r["title"]) or _is_non_job_page(r["url"], r["title"]):
-            continue
-        ddg_jobs = _extract_jobs_from_snippet(r["snippet"], r["url"], r["title"])
-        extracted.extend(ddg_jobs)
+        for r in raw_results:
+            if _is_listing_page(r["title"]) or _is_non_job_page(r["url"], r["title"]):
+                continue
+            ddg_jobs = _extract_jobs_from_snippet(r["snippet"], r["url"], r["title"])
+            extracted.extend(ddg_jobs)
         
     # 3. Deduplication by job title & company, or URL
     seen_jobs = set()

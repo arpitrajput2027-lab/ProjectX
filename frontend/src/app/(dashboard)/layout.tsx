@@ -54,7 +54,7 @@ export default function DashboardLayout({
           </Link>
 
           <Link
-            href="/Katalyst Hire-jobs"
+            href="/katalyst-jobs"
             className="flex items-center px-3 py-2.5 rounded-md hover:bg-ink-2 transition-colors font-medium text-sm text-cream-2 group"
           >
             <Target className="w-4 h-4 mr-3 opacity-70 group-hover:opacity-100 group-hover:text-accent" />

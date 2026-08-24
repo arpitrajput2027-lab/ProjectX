@@ -1,0 +1,113 @@
+# Katalyst Score — Student Proficiency Scoring Feature
+
+Add a "Katalyst Score" (0–100) for each student, computed by analyzing their **GitHub profile**, **LeetCode profile**, and **Resume/Profile** data. The score is visible on the Student's Profile page and to Recruiters in the Talent Pool.
+
+## Scoring Algorithm Breakdown
+
+The total score is **100 points**, divided across three pillars:
+
+### 1. GitHub Score (40 points max)
+| Metric | Max Points | How It's Calculated |
+|---|---|---|
+| Total Public Repos | 8 | `min(repo_count / 15, 1.0) × 8` — 15+ repos = full marks |
+| Total Stars Received | 8 | `min(total_stars / 50, 1.0) × 8` — 50+ stars = full marks |
+| Total Forks Received | 6 | `min(total_forks / 20, 1.0) × 6` — 20+ forks = full marks |
+| Language Diversity | 6 | `min(unique_languages / 5, 1.0) × 6` — 5+ languages = full |
+| Non-Fork Original Repos | 6 | `min(original_repos / 10, 1.0) × 6` — 10+ original = full |
+| Recent Activity (pushed in last 6mo) | 6 | `min(recently_active / 5, 1.0) × 6` — 5+ recent = full |
+
+### 2. LeetCode Score (35 points max)
+| Metric | Max Points | How It's Calculated |
+|---|---|---|
+| Easy Problems Solved | 5 | `min(easy / 50, 1.0) × 5` |
+| Medium Problems Solved | 10 | `min(medium / 80, 1.0) × 10` |
+| Hard Problems Solved | 10 | `min(hard / 30, 1.0) × 10` |
+| Contest Rating | 5 | `min(rating / 2000, 1.0) × 5` |
+| Current Streak (days) | 3 | `min(streak / 30, 1.0) × 3` |
+| Total Active Days | 2 | `min(active_days / 200, 1.0) × 2` |
+
+### 3. Profile/Resume Completeness Score (25 points max)
+| Metric | Max Points | How It's Calculated |
+|---|---|---|
+| Has Education entries | 5 | 5 if ≥1 entry, else 0 |
+| Has Experience entries | 5 | 5 if ≥1 entry, else 0 |
+| Has Projects entries | 5 | 5 if ≥1 entry, else 0 |
+| Has Skills entries | 4 | 4 if ≥1 entry, else 0 |
+| Has Achievements or Certs | 3 | 3 if ≥1 entry in either, else 0 |
+| GitHub & LeetCode connected | 3 | 1.5 each if username is set |
+
+---
+
+## Proposed Changes
+
+### Backend
+
+---
+
+#### [NEW] [readyindex_scorer.py](file:///d:/BhaviXARL/PROJECT/backend/readyindex_scorer.py)
+Core scoring engine. Contains:
+- `LeetCodeAPI` class (from user's provided code) to fetch LeetCode data via GraphQL
+- `GitHubAPI` class (from user's provided code) to fetch GitHub repos via REST API
+- `calculate_github_score(repos)` → score breakdown dict
+- `calculate_leetcode_score(data)` → score breakdown dict
+- `calculate_profile_score(profile)` → score breakdown dict
+- `compute_katalyst_score(github_username, leetcode_username, profile, github_token)` → full result with total score + breakdown
+
+---
+
+#### [MODIFY] [students.py](file:///d:/BhaviXARL/PROJECT/backend/routers/students.py)
+Add a new endpoint:
+- `POST /api/students/{student_id}/katalyst-score` — Fetches GitHub + LeetCode data live, computes the score, saves it to the `student_profiles` table (`katalyst_score` and `katalyst_score_breakdown` columns), and returns the result.
+- `GET /api/students/{student_id}/katalyst-score` — Returns cached score from DB (fast, no external API calls).
+
+---
+
+#### [MODIFY] [main.py](file:///d:/BhaviXARL/PROJECT/backend/main.py)
+No changes needed — the students router is already mounted.
+
+---
+
+### Frontend
+
+---
+
+#### [MODIFY] [ProfileView.tsx](file:///d:/BhaviXARL/PROJECT/frontend/src/features/profile/ProfileView.tsx)
+Add a **Katalyst Score Card** in the top banner area (next to the identity card). Shows:
+- A circular score gauge (0–100) with color coding (red/yellow/green)
+- A "Calculate Score" button for students (not readOnly)
+- A breakdown tooltip/section showing GitHub / LeetCode / Profile sub-scores
+- Loading state while the score is being computed
+
+---
+
+#### [MODIFY] [TalentPoolView.tsx](file:///d:/BhaviXARL/PROJECT/frontend/src/features/recruiter/TalentPoolView.tsx)
+Replace the hardcoded `85%` match badge on each student card with the actual `katalyst_score` from the student profile. If no score exists yet, show "N/A".
+
+---
+
+### Database
+
+> [!IMPORTANT]
+> Two new columns need to be added to the `student_profiles` table in Supabase:
+> - `katalyst_score` (integer, nullable) — the total score 0–100
+> - `katalyst_score_breakdown` (jsonb, nullable) — detailed breakdown by pillar
+> 
+> I will generate and provide the SQL migration for you to run in the Supabase dashboard.
+
+---
+
+## Environment Variables
+
+> [!IMPORTANT]
+> A GitHub Personal Access Token is needed for the GitHub API. Do you want to:
+> - **Option A**: Add a `GITHUB_TOKEN` to your backend `.env` (server-side, single token for all students)
+> - **Option B**: Have each student provide their own GitHub token during onboarding (more complex)
+>
+> **Recommended: Option A** — simpler, and the public repos API has generous rate limits with a token.
+
+## Verification Plan
+
+### Manual Verification
+1. Start the backend, go to a student profile, click "Calculate Katalyst Score"
+2. Verify the score appears with a breakdown
+3. Switch to the Recruiter view → Talent Pool and confirm the score shows on each student card
