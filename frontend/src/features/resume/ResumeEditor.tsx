@@ -22,6 +22,15 @@ export function ResumeEditor({ id = "me" }: { id?: string }) {
     ["editor", "ats", "jd-match"].includes(initialTab) ? initialTab : "editor"
   );
 
+  useEffect(() => {
+    const tabFromUrl = searchParams.get("tab") as ActiveTab;
+    if (tabFromUrl && ["editor", "ats", "jd-match"].includes(tabFromUrl)) {
+      setActiveTab(tabFromUrl);
+    } else if (!tabFromUrl) {
+      setActiveTab("editor");
+    }
+  }, [searchParams]);
+
   // New States for Optimizations
   const [activeRightPanel, setActiveRightPanel] = useState<"sections" | "chat">("sections");
   const [sectionOrder, setSectionOrder] = useState<SectionItem[]>([
@@ -46,13 +55,14 @@ export function ResumeEditor({ id = "me" }: { id?: string }) {
   const [numPages, setNumPages] = useState(1);
 
   // Dynamic WYSIWYG Pagination Effect
-  useEffect(() => {
+  const paginateResume = () => {
     if (!resumeRef.current) return;
 
-    const sections = Array.from(resumeRef.current.querySelectorAll('section'));
+    // Use finer-grained blocks (header, h2, div items) to prevent huge gaps when pushing whole sections
+    const blocks = Array.from(resumeRef.current.querySelectorAll('header, section > h2, section > div'));
 
     // Reset all margins for accurate measurement
-    sections.forEach(s => (s as HTMLElement).style.marginTop = '0px');
+    blocks.forEach(b => (b as HTMLElement).style.marginTop = '0px');
 
     const PAGE_HEIGHT = 1123;
     const PAGE_GAP = 40;
@@ -60,8 +70,8 @@ export function ResumeEditor({ id = "me" }: { id?: string }) {
 
     let currentPage = 1;
 
-    sections.forEach(section => {
-      const el = section as HTMLElement;
+    blocks.forEach(block => {
+      const el = block as HTMLElement;
 
       let top = el.offsetTop;
       let bottom = top + el.offsetHeight;
@@ -87,7 +97,24 @@ export function ResumeEditor({ id = "me" }: { id?: string }) {
       calculatedPages = 1 + Math.ceil((totalHeight - PAGE_HEIGHT) / (PAGE_HEIGHT + PAGE_GAP));
     }
     setNumPages(Math.max(1, calculatedPages));
+  };
 
+  useEffect(() => {
+    // Initial pagination and when dependencies change
+    // Using setTimeout to ensure DOM is fully painted with actual heights
+    const timeoutId = setTimeout(paginateResume, 50);
+
+    const currentRef = resumeRef.current;
+    if (currentRef) {
+      currentRef.addEventListener("input", paginateResume);
+    }
+    
+    return () => {
+      clearTimeout(timeoutId);
+      if (currentRef) {
+        currentRef.removeEventListener("input", paginateResume);
+      }
+    };
   }, [profile, sectionOrder, font, size]);
   useEffect(() => {
     async function fetchProfile() {
@@ -362,7 +389,6 @@ export function ResumeEditor({ id = "me" }: { id?: string }) {
   if (!profile) return <div className="p-24 text-center">Profile not found.</div>;
 
   const tabs: { id: ActiveTab; label: string; icon: React.ReactNode }[] = [
-    { id: "editor", label: "Resume Editor", icon: <FileText className="w-4 h-4" /> },
     { id: "ats", label: "ATS Check", icon: <Shield className="w-4 h-4" /> },
     { id: "jd-match", label: "JD Match", icon: <Briefcase className="w-4 h-4" /> },
   ];
@@ -535,9 +561,21 @@ export function ResumeEditor({ id = "me" }: { id?: string }) {
       {/* Editor Sub-Header */}
       <div className="bg-cream border-b border-rule px-6 py-3 flex items-center justify-between z-10 sticky top-0">
         <div className="flex items-center space-x-3">
-          {/* Tabs removed as per user request */}
+          {tabs.map((tab) => (
+            <button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id)}
+              className={`flex items-center space-x-2 px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
+                activeTab === tab.id
+                  ? "bg-accent text-white border-accent"
+                  : "bg-cream-2 text-ink-3 hover:bg-cream-3 hover:text-ink border-transparent"
+              } border`}
+            >
+              {tab.icon}
+              <span>{tab.label}</span>
+            </button>
+          ))}
         </div>
-
         {/* Toolbar - only show for editor tab */}
         {activeTab === "editor" && (
           <div className="flex items-center space-x-4">

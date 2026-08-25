@@ -12,6 +12,7 @@ import ExperienceModal from "@/components/modals/ExperienceModal";
 import SkillModal from "@/components/modals/SkillModal";
 import AchievementModal from "@/components/modals/AchievementModal";
 import CertificationModal from "@/components/modals/CertificationModal";
+import ScoreAnalysisModal from "@/components/modals/ScoreAnalysisModal";
 
 export function ProfileView({ studentId, readOnly }: { studentId?: string; readOnly?: boolean } = {}) {
   const router = useRouter();
@@ -29,6 +30,7 @@ export function ProfileView({ studentId, readOnly }: { studentId?: string; readO
   const [isSkillModalOpen, setIsSkillModalOpen] = useState(false);
   const [isAchievementModalOpen, setIsAchievementModalOpen] = useState(false);
   const [isCertificationModalOpen, setIsCertificationModalOpen] = useState(false);
+  const [isScoreAnalysisModalOpen, setIsScoreAnalysisModalOpen] = useState(false);
 
   // Form for Contact Info
   const { register: registerContact, handleSubmit: handleSubmitContact, reset: resetContact } = useForm();
@@ -205,15 +207,24 @@ export function ProfileView({ studentId, readOnly }: { studentId?: string; readO
                 <p className="text-xs text-ink-3 mt-1">Out of 100 points</p>
               </div>
             </div>
-            {!readOnly && (
-              <button 
-                onClick={handleCalculateScore}
-                disabled={computingScore}
-                className="text-xs font-medium bg-cream-2 border border-rule-med hover:border-accent text-ink-2 hover:text-accent px-3 py-1.5 rounded flex items-center space-x-2 cursor-pointer transition-colors disabled:opacity-50"
+            <div className="flex flex-col space-y-2 items-end">
+              <button
+                onClick={() => setIsScoreAnalysisModalOpen(true)}
+                className="text-xs font-medium text-accent hover:text-accent-dk flex items-center space-x-1 cursor-pointer transition-colors"
               >
-                {computingScore ? <RefreshCw className="w-3 h-3 animate-spin" /> : <span>Recalculate</span>}
+                <span>Detailed Analysis</span>
+                <ArrowRight className="w-3 h-3" />
               </button>
-            )}
+              {!readOnly && (
+                <button 
+                  onClick={handleCalculateScore}
+                  disabled={computingScore}
+                  className="text-xs font-medium bg-cream-2 border border-rule-med hover:border-accent text-ink-2 hover:text-accent px-3 py-1.5 rounded flex items-center space-x-2 cursor-pointer transition-colors disabled:opacity-50"
+                >
+                  {computingScore ? <RefreshCw className="w-3 h-3 animate-spin" /> : <span>Recalculate</span>}
+                </button>
+              )}
+            </div>
           </div>
         </div>
       </div>
@@ -668,6 +679,12 @@ export function ProfileView({ studentId, readOnly }: { studentId?: string; readO
         resumeId={profile.id}
         initialCertifications={profile.certifications || []}
         onSave={(data) => handleSaveSection("certifications", data)}
+      />
+
+      <ScoreAnalysisModal
+        isOpen={isScoreAnalysisModalOpen}
+        onClose={() => setIsScoreAnalysisModalOpen(false)}
+        profile={profile}
       />
 
     </div>
