@@ -70,6 +70,14 @@ export default function DashboardLayout({
           </Link>
 
           <Link
+            href="/mock-interview"
+            className="flex items-center px-3 py-2.5 rounded-md hover:bg-ink-2 transition-colors font-medium text-sm text-cream-2 group"
+          >
+            <UserCircle className="w-4 h-4 mr-3 opacity-70 group-hover:opacity-100 group-hover:text-accent" />
+            Mock Interview
+          </Link>
+
+          <Link
             href="/applications"
             className="flex items-center px-3 py-2.5 rounded-md hover:bg-ink-2 transition-colors font-medium text-sm text-cream-2 group"
           >

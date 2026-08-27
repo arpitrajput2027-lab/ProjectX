@@ -1,13 +1,14 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from routers import auth, students, resumes, recruiters, jobs, ats, interviews, projects
+from routers import auth, students, resumes, recruiters, jobs, ats, interviews, projects, mock_interview
 
 app = FastAPI(title="AI Career OS API", version="1.0.0")
+
 
 # Allow CORS for frontend
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"], # Update with actual frontend URL in production
+    allow_origins=["http://localhost:3000", "http://127.0.0.1:3000", "http://localhost:3001", "http://127.0.0.1:3001"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -21,6 +22,7 @@ app.include_router(jobs.router, prefix="/api/jobs", tags=["Jobs"])
 app.include_router(ats.router, prefix="/api/ats", tags=["ATS"])
 app.include_router(interviews.router, prefix="/api/interviews", tags=["Interviews"])
 app.include_router(projects.router, prefix="/api/projects", tags=["Projects"])
+app.include_router(mock_interview.router, prefix="/api/mock-interview", tags=["Mock Interview"])
 
 @app.get("/")
 def read_root():
