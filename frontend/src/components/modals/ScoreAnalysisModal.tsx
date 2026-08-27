@@ -50,15 +50,27 @@ export default function ScoreAnalysisModal({ isOpen, onClose, profile }: ScoreAn
   const githubUsername = profile?.github_username;
   const leetcodeUsername = profile?.leetcode_username;
 
-  // Fetch GitHub Projects
+  // Fetch GitHub Projects (cached in sessionStorage)
   useEffect(() => {
     if (activeTab === 'github' && githubUsername && githubProjects.length === 0) {
+      const cacheKey = `github_repos_${githubUsername}`;
+      const cached = sessionStorage.getItem(cacheKey);
+      if (cached) {
+        try {
+          const parsed = JSON.parse(cached);
+          if (Array.isArray(parsed) && parsed.length > 0) {
+            setGithubProjects(parsed);
+            return;
+          }
+        } catch {}
+      }
       setLoadingGithub(true);
       fetch(`https://api.github.com/users/${githubUsername}/repos?sort=updated&per_page=100`)
         .then(res => res.json())
         .then(data => {
           if (Array.isArray(data)) {
             setGithubProjects(data);
+            sessionStorage.setItem(cacheKey, JSON.stringify(data));
           }
         })
         .catch(err => console.error(err))
@@ -66,20 +78,46 @@ export default function ScoreAnalysisModal({ isOpen, onClose, profile }: ScoreAn
     }
   }, [activeTab, githubUsername, githubProjects.length]);
 
-  // Fetch LeetCode Stats
+  // Fetch LeetCode Stats (cached in sessionStorage)
   useEffect(() => {
     if (activeTab === 'leetcode' && leetcodeUsername && !leetcodeStats && !leetcodeError) {
+      const cacheKey = `leetcode_stats_${leetcodeUsername}`;
+      const cached = sessionStorage.getItem(cacheKey);
+      if (cached) {
+        try {
+          const parsed = JSON.parse(cached);
+          if (parsed && parsed.totalSolved !== undefined) {
+            setLeetcodeStats(parsed);
+            return;
+          }
+        } catch {}
+      }
       setLoadingLeetcode(true);
-      fetch(`https://leetcode-stats-api.herokuapp.com/${leetcodeUsername}`)
+      fetch(`https://alfa-leetcode-api.onrender.com/userProfile/${leetcodeUsername}`)
         .then(res => {
            if (!res.ok) throw new Error("Network response was not ok");
            return res.json();
         })
         .then(data => {
-          if (data && data.status === "success") {
-            setLeetcodeStats(data);
+          if (data && (data.totalSolved !== undefined)) {
+            const normalized = {
+              status: "success",
+              totalSolved: data.totalSolved || 0,
+              totalQuestions: data.totalQuestions || 3105,
+              easySolved: data.easySolved || 0,
+              totalEasy: data.totalEasy || 780,
+              mediumSolved: data.mediumSolved || 0,
+              totalMedium: data.totalMedium || 1650,
+              hardSolved: data.hardSolved || 0,
+              totalHard: data.totalHard || 675,
+              acceptanceRate: parseFloat(data.acceptanceRate) || 0,
+              ranking: data.ranking || 0,
+              reputation: data.reputation || 0
+            };
+            setLeetcodeStats(normalized);
+            sessionStorage.setItem(cacheKey, JSON.stringify(normalized));
           } else {
-            throw new Error("Invalid status");
+            throw new Error("Invalid response shape");
           }
         })
         .catch(err => {

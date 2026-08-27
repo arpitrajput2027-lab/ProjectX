@@ -87,7 +87,7 @@ def extract_resume_data(raw_text: str) -> dict:
             
         client = Groq(api_key=groq_key)
         completion = client.chat.completions.create(
-            model="llama-3.3-70b-versatile",
+            model="meta-llama/llama-4-scout-17b-16e-instruct",
             messages=[
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": f"Resume Text:\n{raw_text}"}
@@ -135,7 +135,7 @@ def chat_resume_edit(profile_data: dict, user_prompt: str) -> dict:
             
         client = Groq(api_key=groq_key)
         completion = client.chat.completions.create(
-            model="llama-3.3-70b-versatile",
+            model="meta-llama/llama-4-scout-17b-16e-instruct",
             messages=[
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": f"Current Resume:\n{json.dumps(profile_data)}\n\nUser Request: {user_prompt}"}

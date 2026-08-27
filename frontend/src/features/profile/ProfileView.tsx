@@ -13,6 +13,7 @@ import SkillModal from "@/components/modals/SkillModal";
 import AchievementModal from "@/components/modals/AchievementModal";
 import CertificationModal from "@/components/modals/CertificationModal";
 import ScoreAnalysisModal from "@/components/modals/ScoreAnalysisModal";
+import { GitHubCalendar } from "react-github-calendar";
 
 export function ProfileView({ studentId, readOnly }: { studentId?: string; readOnly?: boolean } = {}) {
   const router = useRouter();
@@ -566,7 +567,6 @@ export function ProfileView({ studentId, readOnly }: { studentId?: string; readO
                         src={`https://streak-stats.demolab.com?user=${githubUsername}&theme=tokyonight&background=faf8f4&border=e2dbd0&stroke=8b6a3e&ring=8b6a3e&fire=8b6a3e&currStreakLabel=3d3a35`}
                         alt="GitHub Streak"
                         className="w-full rounded-md"
-                        onError={(e) => { e.currentTarget.src = STREAK_FALLBACK; }}
                       />
                     ) : (
                       <div className="text-sm text-ink-3 p-4 bg-cream-2 rounded text-center">Not connected</div>
@@ -581,7 +581,6 @@ export function ProfileView({ studentId, readOnly }: { studentId?: string; readO
                         src={`https://github-readme-activity-graph.vercel.app/graph?username=${githubUsername}&theme=github-compact&bg_color=faf8f4&title_color=1a1814&color=3d3a35&line=8b6a3e&point=1a1814&hide_border=true`}
                         alt="GitHub Activity Graph"
                         className="w-full rounded-md"
-                        onError={(e) => { e.currentTarget.src = GRAPH_FALLBACK; }}
                       />
                     ) : (
                       <div className="text-sm text-ink-3 p-4 bg-cream-2 rounded text-center">Not connected</div>
@@ -596,7 +595,6 @@ export function ProfileView({ studentId, readOnly }: { studentId?: string; readO
                         src={`https://ghchart.rshah.org/8b6a3e/${githubUsername}`}
                         alt="GitHub Heatmap"
                         className="w-full rounded-md"
-                        onError={(e) => { e.currentTarget.src = HEATMAP_FALLBACK; }}
                       />
                     ) : (
                       <div className="text-sm text-ink-3 p-4 bg-cream-2 rounded text-center">Not connected</div>
