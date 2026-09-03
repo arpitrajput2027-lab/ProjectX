@@ -87,7 +87,7 @@ def extract_resume_data(raw_text: str) -> dict:
             
         client = Groq(api_key=groq_key)
         completion = client.chat.completions.create(
-            model="meta-llama/llama-4-scout-17b-16e-instruct",
+            model=os.getenv("GROQ_MODEL", "openai/gpt-oss-120b"),
             messages=[
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": f"Resume Text:\n{raw_text}"}
@@ -108,7 +108,8 @@ def extract_resume_data(raw_text: str) -> dict:
             raise ValueError("GEMINI_API_KEY not found, and Groq failed.")
             
         genai.configure(api_key=gemini_key)
-        model = genai.GenerativeModel('gemini-3.6-flash', generation_config={"response_mime_type": "application/json"})
+        model_name = os.getenv("GEMINI_MODEL", "gemini-3.6-flash")
+        model = genai.GenerativeModel(model_name, generation_config={"response_mime_type": "application/json"})
         
         prompt = f"{system_prompt}\n\nResume Text:\n{raw_text}"
         response = model.generate_content(prompt)
@@ -135,7 +136,7 @@ def chat_resume_edit(profile_data: dict, user_prompt: str) -> dict:
             
         client = Groq(api_key=groq_key)
         completion = client.chat.completions.create(
-            model="meta-llama/llama-4-scout-17b-16e-instruct",
+            model=os.getenv("GROQ_MODEL", "openai/gpt-oss-120b"),
             messages=[
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": f"Current Resume:\n{json.dumps(profile_data)}\n\nUser Request: {user_prompt}"}
@@ -155,7 +156,8 @@ def chat_resume_edit(profile_data: dict, user_prompt: str) -> dict:
             raise ValueError("GEMINI_API_KEY not found, and Groq failed.")
             
         genai.configure(api_key=gemini_key)
-        model = genai.GenerativeModel('gemini-3.6-flash', generation_config={"response_mime_type": "application/json"})
+        model_name = os.getenv("GEMINI_MODEL", "gemini-3.6-flash")
+        model = genai.GenerativeModel(model_name, generation_config={"response_mime_type": "application/json"})
         
         prompt = f"{system_prompt}\n\nCurrent Resume:\n{json.dumps(profile_data)}\n\nUser Request: {user_prompt}"
         response = model.generate_content(prompt)

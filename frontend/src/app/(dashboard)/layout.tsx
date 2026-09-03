@@ -84,6 +84,14 @@ export default function DashboardLayout({
             <CheckCircle className="w-4 h-4 mr-3 opacity-70 group-hover:opacity-100 group-hover:text-accent" />
             My Applications
           </Link>
+
+          <Link
+            href="/contest-upskilling"
+            className="flex items-center px-3 py-2.5 rounded-md hover:bg-ink-2 transition-colors font-medium text-sm text-cream-2 group"
+          >
+            <Target className="w-4 h-4 mr-3 opacity-70 group-hover:opacity-100 group-hover:text-accent" />
+            Contest & Upskilling
+          </Link>
         </nav>
 
         <div className="mt-auto p-4 m-3 rounded-lg bg-ink-2/40 border border-rule-med flex items-center gap-3 hover:bg-ink-2/80 transition-colors cursor-pointer">

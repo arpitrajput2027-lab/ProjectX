@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from routers import auth, students, resumes, recruiters, jobs, ats, interviews, projects, mock_interview
+from routers import auth, students, resumes, recruiters, jobs, ats, interviews, projects, mock_interview, courses
 
 app = FastAPI(title="AI Career OS API", version="1.0.0")
 
@@ -23,6 +23,7 @@ app.include_router(ats.router, prefix="/api/ats", tags=["ATS"])
 app.include_router(interviews.router, prefix="/api/interviews", tags=["Interviews"])
 app.include_router(projects.router, prefix="/api/projects", tags=["Projects"])
 app.include_router(mock_interview.router, prefix="/api/mock-interview", tags=["Mock Interview"])
+app.include_router(courses.router, prefix="/api/courses", tags=["Courses"])
 
 @app.get("/")
 def read_root():

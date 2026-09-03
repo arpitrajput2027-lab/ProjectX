@@ -7,7 +7,7 @@ import re
 from typing import Optional, List
 
 import requests
-from ddgs import DDGS
+from duckduckgo_search import DDGS
 
 # Load environment keys (these are loaded by backend/main.py or dotenv)
 SARVAM_API_KEY = os.getenv("SARVAM_API_KEY", "")
@@ -144,7 +144,6 @@ def _search_serpapi(query: str, api_key: str) -> List[dict]:
         "q": query,
         "api_key": api_key,
         "hl": "en",
-        "chips": "date_posted:week",
     }
     try:
         resp = requests.get(url, params=params, timeout=20)
@@ -241,8 +240,8 @@ def run_search(
             serpapi_jobs = _search_serpapi(sq, serpapi_key)
             extracted.extend(serpapi_jobs)
             
-    # 2. DuckDuckGo search (Fallback if SerpApi fails or key is missing)
-    if not extracted:
+    # 2. DuckDuckGo search (Fallback if SerpApi fails, key missing, or very few results)
+    if len(extracted) < 5:
         ddg_queries = queries
         if not ddg_queries:
             if job_roles:

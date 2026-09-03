@@ -5,7 +5,7 @@ import { useInterviewWebSocket } from "@/hooks/useInterviewWebSocket";
 import { useTTS } from "@/hooks/useTTS";
 import { useSTT } from "@/hooks/useSTT";
 import { useAvatarStore } from "@/store/avatarStore";
-import { Play, Square, Pause, Mic, MicOff, MessageSquare, Clock, Timer } from "lucide-react";
+import { Play, Square, Pause, Mic, MicOff, MessageSquare, Clock, Timer, Send } from "lucide-react";
 import dynamic from "next/dynamic";
 import { supabase } from "@/lib/supabase";
 
@@ -30,6 +30,7 @@ export default function MockInterviewPage() {
   const [isPaused, setIsPaused] = useState(false);
   const [selectedTime, setSelectedTime] = useState<number | null>(null);
   const [timeLeft, setTimeLeft] = useState(0);
+  const [inputText, setInputText] = useState("");
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const isPausedRef = useRef(false);
 
@@ -68,10 +69,17 @@ export default function MockInterviewPage() {
   const { isRecording, toggleRecording, stopRecording } = useSTT({
     onTranscript: (text) => {
       if (text.trim()) {
-        sendAnswer(text);
+        setInputText(prev => prev ? prev + " " + text : text);
       }
     }
   });
+
+  const handleSend = () => {
+    if (inputText.trim()) {
+      sendAnswer(inputText.trim());
+      setInputText("");
+    }
+  };
 
   useEffect(() => {
     async function getUser() {
@@ -285,14 +293,42 @@ export default function MockInterviewPage() {
             </div>
 
             {/* Input Controls */}
-            <div className="p-4 border-t border-rule-med bg-white flex justify-center">
-               <button
-                  onClick={toggleRecording}
-                  disabled={isPaused}
-                  className={`w-16 h-16 rounded-full flex items-center justify-center transition-all ${isRecording ? 'bg-red-500 text-white animate-pulse shadow-lg scale-110' : 'bg-ink text-cream hover:bg-accent disabled:opacity-50 disabled:cursor-not-allowed'}`}
-               >
-                 {isRecording ? <MicOff className="w-6 h-6" /> : <Mic className="w-6 h-6" />}
-               </button>
+            <div className="p-4 border-t border-rule-med bg-white flex flex-col space-y-3">
+               <div className="flex items-end space-x-2">
+                 <textarea 
+                   value={inputText}
+                   onChange={(e) => setInputText(e.target.value)}
+                   onKeyDown={(e) => {
+                     if (e.key === 'Enter' && !e.shiftKey) {
+                       e.preventDefault();
+                       handleSend();
+                     }
+                   }}
+                   placeholder="Type your answer or use the microphone..."
+                   className="flex-1 p-3 border border-rule-med rounded-lg focus:outline-none focus:ring-2 focus:ring-accent resize-none bg-cream-2 text-ink text-sm"
+                   rows={3}
+                   disabled={isPaused}
+                 />
+                 <div className="flex flex-col space-y-2">
+                   <button
+                      onClick={toggleRecording}
+                      disabled={isPaused}
+                      title={isRecording ? "Stop Recording" : "Start Recording"}
+                      className={`p-3 rounded-full flex items-center justify-center transition-all ${isRecording ? 'bg-red-500 text-white animate-pulse shadow-md' : 'bg-ink text-cream hover:bg-accent disabled:opacity-50'}`}
+                   >
+                     {isRecording ? <MicOff className="w-5 h-5" /> : <Mic className="w-5 h-5" />}
+                   </button>
+                   <button 
+                     onClick={handleSend}
+                     disabled={!inputText.trim() || isPaused}
+                     className="p-3 rounded-full bg-accent text-white hover:bg-accent-dk disabled:opacity-50 transition-all flex items-center justify-center"
+                     title="Send Answer"
+                   >
+                     <Send className="w-5 h-5" />
+                   </button>
+                 </div>
+               </div>
+               {isRecording && <div className="text-xs text-red-500 font-medium animate-pulse flex justify-center">Listening... speak your answer. Click stop or send when done.</div>}
             </div>
           </div>
         )}

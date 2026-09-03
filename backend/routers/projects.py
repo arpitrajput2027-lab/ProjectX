@@ -79,7 +79,7 @@ Do NOT include markdown code fences or anything outside the JSON object."""
             
         client = Groq(api_key=groq_key)
         completion = client.chat.completions.create(
-            model="meta-llama/llama-4-scout-17b-16e-instruct",
+            model=os.getenv("GROQ_MODEL", "openai/gpt-oss-120b"),
             messages=messages,
             temperature=0.4,
             response_format={"type": "json_object"}
@@ -102,7 +102,8 @@ Do NOT include markdown code fences or anything outside the JSON object."""
                 raise ValueError("GEMINI_API_KEY not found, and Groq failed.")
                 
             genai.configure(api_key=gemini_key)
-            model = genai.GenerativeModel('gemini-3.6-flash', generation_config={"response_mime_type": "application/json"})
+            model_name = os.getenv("GEMINI_MODEL", "gemini-3.6-flash")
+            model = genai.GenerativeModel(model_name, generation_config={"response_mime_type": "application/json"})
             
             # Flatten messages into a single prompt for Gemini
             full_prompt = system_prompt + "\n\n"

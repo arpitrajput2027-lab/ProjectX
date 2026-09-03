@@ -50,7 +50,7 @@ def analyze_ats_score(resume_data: dict) -> dict:
             
         client = Groq(api_key=groq_key)
         completion = client.chat.completions.create(
-            model="meta-llama/llama-4-scout-17b-16e-instruct",
+            model=os.getenv("GROQ_MODEL", "openai/gpt-oss-120b"),
             messages=[
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": f"Resume Data:\n{json.dumps(resume_data, indent=2)}"}
@@ -70,7 +70,8 @@ def analyze_ats_score(resume_data: dict) -> dict:
             raise ValueError("GEMINI_API_KEY not found, and Groq failed.")
             
         genai.configure(api_key=gemini_key)
-        model = genai.GenerativeModel('gemini-3.6-flash', generation_config={"response_mime_type": "application/json"})
+        model_name = os.getenv("GEMINI_MODEL", "gemini-3.6-flash")
+        model = genai.GenerativeModel(model_name, generation_config={"response_mime_type": "application/json"})
         
         prompt = f"{system_prompt}\n\nResume Data:\n{json.dumps(resume_data, indent=2)}"
         response = model.generate_content(prompt)
@@ -108,7 +109,7 @@ def match_resume_to_jd(resume_data: dict, job_description: str) -> dict:
             
         client = Groq(api_key=groq_key)
         completion = client.chat.completions.create(
-            model="meta-llama/llama-4-scout-17b-16e-instruct",
+            model=os.getenv("GROQ_MODEL", "openai/gpt-oss-120b"),
             messages=[
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": f"Resume Data:\n{json.dumps(resume_data, indent=2)}\n\nJob Description:\n{job_description}"}
@@ -128,7 +129,8 @@ def match_resume_to_jd(resume_data: dict, job_description: str) -> dict:
             raise ValueError("GEMINI_API_KEY not found, and Groq failed.")
             
         genai.configure(api_key=gemini_key)
-        model = genai.GenerativeModel('gemini-3.6-flash', generation_config={"response_mime_type": "application/json"})
+        model_name = os.getenv("GEMINI_MODEL", "gemini-3.6-flash")
+        model = genai.GenerativeModel(model_name, generation_config={"response_mime_type": "application/json"})
         
         prompt = f"{system_prompt}\n\nResume Data:\n{json.dumps(resume_data, indent=2)}\n\nJob Description:\n{job_description}"
         response = model.generate_content(prompt)
@@ -174,7 +176,7 @@ def customize_resume_for_jd(resume_data: dict, job_description: str, match_analy
             
         client = Groq(api_key=groq_key)
         completion = client.chat.completions.create(
-            model="meta-llama/llama-4-scout-17b-16e-instruct",
+            model=os.getenv("GROQ_MODEL", "openai/gpt-oss-120b"),
             messages=[
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": f"Resume Data:\n{json.dumps(resume_data, indent=2)}\n\nJob Description:\n{job_description}\n\nMatch Analysis:\n{json.dumps(match_analysis, indent=2)}"}
@@ -194,7 +196,8 @@ def customize_resume_for_jd(resume_data: dict, job_description: str, match_analy
             raise ValueError("GEMINI_API_KEY not found, and Groq failed.")
             
         genai.configure(api_key=gemini_key)
-        model = genai.GenerativeModel('gemini-3.6-flash', generation_config={"response_mime_type": "application/json"})
+        model_name = os.getenv("GEMINI_MODEL", "gemini-3.6-flash")
+        model = genai.GenerativeModel(model_name, generation_config={"response_mime_type": "application/json"})
         
         prompt = f"{system_prompt}\n\nResume Data:\n{json.dumps(resume_data, indent=2)}\n\nJob Description:\n{job_description}\n\nMatch Analysis:\n{json.dumps(match_analysis, indent=2)}"
         response = model.generate_content(prompt)

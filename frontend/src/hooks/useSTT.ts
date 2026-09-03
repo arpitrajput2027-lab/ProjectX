@@ -46,6 +46,9 @@ export function useSTT({ onTranscript }: UseSTTProps) {
         
         recognitionRef.current.onerror = (e: any) => {
           console.error("STT Error:", e.error);
+          if (e.error === "network") {
+            alert("Microphone network error. This usually happens if you are using a browser like Brave/Arc, or if you lack an internet connection. Please try using Google Chrome or Edge.");
+          }
           if (e.error !== "no-speech") {
             setIsRecording(false);
             stopTalking();

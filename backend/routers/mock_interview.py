@@ -59,8 +59,9 @@ async def mock_interview_ws(websocket: WebSocket, student_id: str):
     6. Keep your responses brief and spoken-word friendly (avoid long lists or code blocks unless necessary).
     """
 
+    model_name = os.getenv("GEMINI_MODEL", "gemini-3.6-flash")
     model = genai.GenerativeModel(
-        model_name="gemini-1.5-flash",
+        model_name=model_name,
         system_instruction=system_instruction
     )
     
@@ -161,7 +162,8 @@ async def generate_and_send_feedback(websocket: WebSocket, studentId: str):
     """
     
     try:
-        model = genai.GenerativeModel('gemini-1.5-flash', generation_config={"response_mime_type": "application/json"})
+        model_name = os.getenv("GEMINI_MODEL", "gemini-3.6-flash")
+        model = genai.GenerativeModel(model_name, generation_config={"response_mime_type": "application/json"})
         
         # Run blocking Gemini call in a thread to avoid blocking the event loop
         print(f"[FEEDBACK] Generating feedback for {studentId}...")
